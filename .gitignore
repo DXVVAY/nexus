@@ -1,0 +1,14 @@
+**/__pycache__/
+*.pyc 
+__pycache__
+__pycache__/
+start.bat
+setup.bat
+/build
+*.spec
+/dist
+README.md
+/main.dist
+/main.build
+/main.onefile-build
+tokens.txt
