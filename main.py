@@ -1,104 +1,89 @@
-import requests
-import hashlib
-import hmac
-import jwt
-import os
-import platform
-from ab5 import vgratient
+from time import sleep
+from core import *
 from pystyle import Center
-from logger import logger
-import subprocess
+import os
+from ab5 import vgratient
+import shutil
 
-
-match platform.uname().system:
-    case "Windows":
-        clear = lambda: os.system('cls')
-    case _:
-        clear = lambda: os.system('clear')
-
-class Auth:
-    VERSION = "1.0.0"
-    PRODUCT = "Nexus"
-    GATEWAY_URL = "http://45.131.65.9:5000//authenticate"
-    SECRET_KEY = "Niggatronnigga[[23[4]23[][]]7[[7]"
-
-    ASCII = """
-                        ███╗   ██╗███████╗██╗  ██╗██╗   ██╗███████╗
-                        ████╗  ██║██╔════╝╚██╗██╔╝██║   ██║██╔════╝
-                        ██╔██╗ ██║█████╗   ╚███╔╝ ██║   ██║███████╗
-                        ██║╚██╗██║██╔══╝   ██╔██╗ ██║   ██║╚════██║
-                        ██║ ╚████║███████╗██╔╝ ██╗╚██████╔╝███████║
-                        ╚═╝  ╚═══╝╚══════╝╚═╝  ╚═╝ ╚═════╝ ╚══════╝
-    """
-
+class ui:
     WHITE = "\u001b[37m"
+    PINK = "\033[38;5;176m"
     MAGENTA = "\033[38;5;97m"
-    RED = "\u001b[31m"
-    GREEN = "\u001b[32m"
-    YELLOW = "\u001b[33m";
     PINK = "\033[38;5;176m"
     START_COLOR = [111, 70, 133]
     END_COLOR = [218, 112, 214]
 
+    ASCII = f"""
 
 
-    @staticmethod
-    def generate_signature(data, secret):
-        return hmac.new(secret.encode('utf-8'), data.encode('utf-8'), hashlib.sha256).hexdigest()
 
-    @staticmethod
-    def authenticate_with_gateway(key, hwid):
-        payload = {
-            'license': key,
-            'product': Auth.PRODUCT,
-            'version': Auth.VERSION,
-            'hwid': hwid,
+                                  ███╗   ██╗███████╗██╗  ██╗██╗   ██╗███████╗
+                                  ████╗  ██║██╔════╝╚██╗██╔╝██║   ██║██╔════╝ {PINK}[{MAGENTA}Website{PINK}] {WHITE}| Nexus.vin
+                                  ██╔██╗ ██║█████╗   ╚███╔╝ ██║   ██║███████╗ {PINK}[{MAGENTA}Tokens{PINK}]  {WHITE}| null
+                                  ██║╚██╗██║██╔══╝   ██╔██╗ ██║   ██║╚════██║ {PINK}[{MAGENTA}Proxies{PINK}] {WHITE}| null
+                                  ██║ ╚████║███████╗██╔╝ ██╗╚██████╔╝███████║ {PINK}[{MAGENTA}Discord{PINK}] {WHITE}| nexustool
+                                  ╚═╝  ╚═══╝╚══════╝╚═╝  ╚═╝ ╚═════╝ ╚══════╝
+    """
+    MENU = f"""
+      {PINK}[{MAGENTA}01{PINK}] {WHITE}| Joiner Menu         {PINK}[{MAGENTA}07{PINK}] {WHITE}| Sledge Hammer       {PINK}[{MAGENTA}13{PINK}] {WHITE}| Token Bio Changer   {PINK}[{MAGENTA}19{PINK}] {WHITE}| User Mass Friend
+      {PINK}[{MAGENTA}02{PINK}] {WHITE}| Token Leaver        {PINK}[{MAGENTA}08{PINK}] {WHITE}| Button Presser      {PINK}[{MAGENTA}14{PINK}] {WHITE}| Token Pron Changer  {PINK}[{MAGENTA}20{PINK}] {WHITE}| User Mass DM
+      {PINK}[{MAGENTA}03{PINK}] {WHITE}| Channel Spammer     {PINK}[{MAGENTA}09{PINK}] {WHITE}| Token Reactor       {PINK}[{MAGENTA}15{PINK}] {WHITE}| VC Menu             {PINK}[{MAGENTA}21{PINK}] {WHITE}| Server Mass Friend
+      {PINK}[{MAGENTA}04{PINK}] {WHITE}| Checker Menu        {PINK}[{MAGENTA}10{PINK}] {WHITE}| Global Nicker       {PINK}[{MAGENTA}16{PINK}] {WHITE}| Soundboard Spammer  {PINK}[{MAGENTA}22{PINK}] {WHITE}| Mass Report
+      {PINK}[{MAGENTA}05{PINK}] {WHITE}| Bypass Rules        {PINK}[{MAGENTA}11{PINK}] {WHITE}| Server Nicker       {PINK}[{MAGENTA}17{PINK}] {WHITE}| Token Typer         {PINK}[{MAGENTA}23{PINK}] {WHITE}| Mass Thread
+      {PINK}[{MAGENTA}06{PINK}] {WHITE}| Restorecord Bypass  {PINK}[{MAGENTA}12{PINK}] {WHITE}| Hypesquad Changer   {PINK}[{MAGENTA}18{PINK}] {WHITE}| Forum Spammer       {PINK}[{MAGENTA}24{PINK}] {WHITE}| Webhook Tool
+    """
+
+    def __init__(self):
+        self.menu_options = {
+            '1': ('Joiner Menu', self.tempfunc),
+            '2': ('Token Leaver', self.tempfunc),
+            '3': ('Channel Spammer', self.tempfunc),
+            '4': ('Checker Menu', self.tempfunc),
+            '5': ('Bypass Rules', self.tempfunc),
+            '6': ('Restorecord Bypass', self.tempfunc),
+            '7': ('Sledge Hammer', self.tempfunc),
+            '8': ('Button Presser', self.tempfunc),
+            '9': ('Token Reactor', self.tempfunc),
+            '10': ('Global Nicker', self.tempfunc),
+            '11': ('Server Nicker', self.tempfunc),
+            '12': ('Hypesquad Changer', self.tempfunc),
+            '13': ('Token Bio Changer', self.tempfunc),
+            '14': ('Token Pron Changer', self.tempfunc),
+            '15': ('VC Menu', self.tempfunc),
+            '16': ('Soundboard Spammer', self.tempfunc),
+            '17': ('Token Typer', self.tempfunc),
+            '18': ('Forum Spammer', self.tempfunc),
+            '19': ('User Mass Friend', self.tempfunc),
+            '20': ('User Mass DM', self.tempfunc),
+            '21': ('Server Mass Friend', self.tempfunc),
+            '22': ('Mass Report', self.tempfunc),
+            '23': ('Mass Thread', self.tempfunc),
+            '24': ('Webhook Tool', self.tempfunc),
         }
 
-        payload['signature'] = Auth.generate_signature(
-            f"{payload['license']}{payload['product']}{payload['version']}{payload['hwid']}", Auth.SECRET_KEY
-        )
+    def main_screen(self):
+        while True:
+            utility.clear()
+            print(Center.XCenter(vgratient(self.ASCII, self.START_COLOR, self.END_COLOR)))
+            print(Center.XCenter(self.MENU))
+            while True:
+                cc = input(f"      {self.PINK}[{self.MAGENTA}Choice{self.PINK}]{self.MAGENTA} -> ")
+                if cc in self.menu_options:
+                    choice = cc
+                    break
+                else:
+                    log.warning("Invalid option. Please try again.")
+                    sleep(1)
+                    self.main_screen()
 
-        token = jwt.encode(payload, Auth.SECRET_KEY, algorithm='HS256')
-        headers = {'Authorization': f'Bearer {token}'}
+            _, func = self.menu_options[choice]
+            func()
 
-        response = requests.post(Auth.GATEWAY_URL, headers=headers, json=payload)
-        return response.json()
-
-    @staticmethod
-    def banner():
-        clear()
-        print(Center.XCenter(vgratient(Auth.ASCII, Auth.START_COLOR, Auth.END_COLOR)))
-
-    @staticmethod
-    def get_hwid():
-        info = f"{platform.system()}-{platform.node()}-{platform.architecture()}"
-        hwid = hashlib.sha256(info.encode()).hexdigest()
-        return hwid
-
-    @staticmethod
-    def main():
-        Auth.banner()
-        key = input(f"{Auth.PINK}[{Auth.MAGENTA}Key{Auth.PINK}]{Auth.WHITE} -> ")
-        hwid = Auth.get_hwid()
-        status = Auth.authenticate_with_gateway(key, hwid)
-        if status['status_msg'] == "SUCCESSFUL_AUTHENTICATION":
-            logger.success("Login successful")
-            logger.welcome(status['discord_tag'])
-            asd = input("")
-        else:
-            Auth.handle_error(status['status_msg'])
-
-    @staticmethod
-    def handle_error(status_msg):
-        error_messages = {
-            "MAX_IP_CAP": "You have reached the maximum number of allowed IP addresses!",
-            "INVALID_LICENSE": "Your license key is invalid!",
-            "MAX_HWID_CAP": "You have reached the maximum number of allowed HWIDs!",
-        }
-
-        error_message = error_messages.get(status_msg, "Something went wrong!")
-        print(error_message)
+    def tempfunc(self):
+        print("temp func")
+        log.PETC()
+        self.main_screen()
 
 if __name__ == "__main__":
-    Auth.main()
+    ui = ui()
+    ui.main_screen()
