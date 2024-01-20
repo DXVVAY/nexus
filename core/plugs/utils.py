@@ -64,6 +64,14 @@ class utility:
             token = tokenn
         return token
 
+    def get_client_type():
+        heads = {
+            "win": "Desktop", 
+            "ios": "iOS"
+        }
+        typ = config.get("header_typ")
+        return heads.get(typ, "Unknown")
+
     def run_threads(max_threads, func, args=[], delay=0):
         def thread_complete(future):
             debug = config.get("debug_mode")

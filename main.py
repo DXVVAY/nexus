@@ -1,16 +1,11 @@
-from time import sleep
 from core import *
-from pystyle import Center
-import os
-from ab5 import vgratient
-import shutil
 
 class ui:
     WHITE = "\u001b[37m"
     PINK = "\033[38;5;176m"
     MAGENTA = "\033[38;5;97m"
     PINK = "\033[38;5;176m"
-    START_COLOR = [111, 70, 133]
+    START_COLOR = [111, 70, 130]
     END_COLOR = [218, 112, 214]
 
     ASCII = f"""
@@ -19,8 +14,8 @@ class ui:
 
                                   ███╗   ██╗███████╗██╗  ██╗██╗   ██╗███████╗
                                   ████╗  ██║██╔════╝╚██╗██╔╝██║   ██║██╔════╝ {PINK}[{MAGENTA}Website{PINK}] {WHITE}| Nexus.vin
-                                  ██╔██╗ ██║█████╗   ╚███╔╝ ██║   ██║███████╗ {PINK}[{MAGENTA}Tokens{PINK}]  {WHITE}| null
-                                  ██║╚██╗██║██╔══╝   ██╔██╗ ██║   ██║╚════██║ {PINK}[{MAGENTA}Proxies{PINK}] {WHITE}| null
+                                  ██╔██╗ ██║█████╗   ╚███╔╝ ██║   ██║███████╗ {PINK}[{MAGENTA}Tokens{PINK}]  {WHITE}| {len(config.get_tokens())}
+                                  ██║╚██╗██║██╔══╝   ██╔██╗ ██║   ██║╚════██║ {PINK}[{MAGENTA}Client{PINK}]  {WHITE}| {utility.get_client_type()}
                                   ██║ ╚████║███████╗██╔╝ ██╗╚██████╔╝███████║ {PINK}[{MAGENTA}Discord{PINK}] {WHITE}| nexustool
                                   ╚═╝  ╚═══╝╚══════╝╚═╝  ╚═╝ ╚═════╝ ╚══════╝
     """
@@ -84,6 +79,14 @@ class ui:
         log.PETC()
         self.main_screen()
 
+def main():
+    try:
+        Auth.authenticate()
+        ui().main_screen()
+    except Exception as e:
+        log.failure(e)
+        log.PETC()
+        main()
+
 if __name__ == "__main__":
-    ui = ui()
-    ui.main_screen()
+    main()

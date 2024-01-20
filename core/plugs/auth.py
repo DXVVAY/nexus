@@ -4,8 +4,8 @@ from core import *
 
 class Auth:
     PRODUCT = "Nexus"
-    GATEWAY_URL = "http://45.131.65.9:5000//authenticate"
-    SECRET_KEY = "Niggatronnigga[[23[4]23[][]]7[[7]"
+    GATEWAY_URL = "http://45.131.65.9:20001//authenticate"
+    SECRET_KEY = requests.get("http://45.131.65.9:20001//secret_key", json={"key": "NIGGERS+93759237_are_NOT_real"}).json().get("secret")
 
     @staticmethod
     def exiter():
@@ -16,7 +16,7 @@ class Auth:
         sys.exit()
 
     @staticmethod
-    def generate_signature(data, secret):
+    def gen_sig(data, secret):
         sig = hmac.new(secret.encode('utf-8'), data.encode('utf-8'), hashlib.sha256).hexdigest()
         log.debug(f"Got Signature -> {sig[:40]}...", "Auth")
         return sig
@@ -30,7 +30,7 @@ class Auth:
             'hwid': hwid,
         }
 
-        payload['signature'] = Auth.generate_signature(
+        payload['signature'] = Auth.gen_sig(
             f"{payload['license']}{payload['product']}{payload['version']}{payload['hwid']}", Auth.SECRET_KEY
         )
 
@@ -48,6 +48,7 @@ class Auth:
 
     @staticmethod
     def authenticate():
+        utility.clear()
         key = config.get('nexus_key')
         if key == "":
             key = utility.ask("Key")

@@ -77,13 +77,13 @@ class Config:
             del data[key]
             self.save(data)
 
-    def get_tokens():
+    def get_tokens(self):
         with open("tokens.txt", "r") as f:
             tokens = f.read().strip().splitlines()
         tokens = [token for token in tokens if token not in [" ", "", "\n"]]
         return tokens
 
-    def get_random_token():
+    def get_random_token(self):
         tokens = config.get_tokens()
         if tokens:
             return random.choice(tokens)

@@ -9,16 +9,17 @@ class WebSocket(websocket.WebSocketApp):
         self.token = token
         self.guild_id = guild_id
         self.channel_id = channel_id
+        self.current_session = client.get_session()
         self.socket_headers = {
-            "Accept-Language": "en-US,en;q=0.9",
+            "Accept-Language": self.current_session.headers["accept-language"],
             "Cache-Control": "no-cache",
             "Pragma": "no-cache",
             "Sec-WebSocket-Extensions": "permessage-deflate; client_max_window_bits",
-            "User-Agent": "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Mobile Safari/537.36'",
+            "User-Agent": self.current_session.headers["user-agent"],
         }
         super().__init__(
             "wss://gateway.discord.gg/?encoding=json&v=9",
-            header=self.sockemt_headers,
+            header=self.socket_headers,
             on_open=lambda ws: self.sock_open(ws),
             on_message=lambda ws, msg: self.sock_message(ws, msg),
             on_close=lambda ws, close_code, close_msg: self.sock_close(

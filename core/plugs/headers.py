@@ -86,12 +86,12 @@ class IOS_headers:
 
     def returner(self):
         return {
-            "Host": "discord.com",
+            "host": "discord.com",
             "x-debug-options": "bugReporterEnabled",
-            "Content-Type": "application/json",
-            "Accept": "*/*",
-            "User-Agent": self.user_agent,
-            "Accept-Language": "sv-SE",
+            "content-type": "application/json",
+            "accept": "*/*",
+            "user-agent": self.user_agent,
+            "accept-language": "sv-SE",
             "x-discord-locale": "en-US",
             "x-super-properties": self.x_super_properties,
         }
@@ -241,11 +241,14 @@ class Client:
         cookies["locale"] = "en-US"
         return cookies
 
-    def get_session(self, token:str):
+    def get_session(self, token=""):
         session = self.session
         cookie = self.get_cookies()
         session.headers = self.headers
-        session.headers.update({"Authorization": token})
+        if token == "":
+            pass
+        else:
+            session.headers.update({"Authorization": token})
         session.headers.update({
             "cookie": f"__cfruid={cookie['__cfruid']}; __dcfduid={cookie['__dcfduid']}; __sdcfduid={cookie['__sdcfduid']}",
         })
@@ -278,4 +281,4 @@ class Client:
             return Client(typ)
 
 
-#client = Client.get_client()
+client = Client.get_client()

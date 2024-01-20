@@ -15,8 +15,8 @@ class logger:
         return datetime.now().strftime("%H:%M:%S")
     
     def message(self, level, message):
-        with open('config.json') as config_file:
-            config = json.load(config_file)
+        with open('config.json') as f:
+            config = json.load(f)
         timer = config.get('log_timer')
         time_now = f" {self.PINK}[{self.MAGENTA}{self.get_time()}{self.PINK}] {self.WHITE}|" if timer else ""
         return f"{self.prefix} {self.WHITE}|{time_now} {self.PINK}[{level}{self.PINK}] {self.WHITE}-> {self.PINK}[{self.MAGENTA}{message}{self.PINK}]"
