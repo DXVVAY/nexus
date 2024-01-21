@@ -59,3 +59,4 @@ from .plugs.scraper import *
 # functions
 from .funcs.token_joiner import *
 from .funcs.token_leaver import *
+from .funcs.token_spammer import *

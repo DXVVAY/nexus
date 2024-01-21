@@ -32,7 +32,7 @@ class ui:
         self.menu_options = {
             '1': ('Token Joiner', token_joiner),
             '2': ('Token Leaver', token_leaver),
-            '3': ('Channel Spammer', self.tempfunc),
+            '3': ('Channel Spammer', token_spammer),
             '4': ('Checker Menu', self.tempfunc),
             '5': ('Bypass Rules', self.tempfunc),
             '6': ('Restorecord Bypass', self.tempfunc),
