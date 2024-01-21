@@ -40,7 +40,7 @@ class Config:
                 log.info(f"Config file is up to date")
                 sleep(1)
             else:
-                key = self.get("xvirus_key")
+                key = self.get("nexus_key")
                 log.info(f"Config File Outdated Please Copy Your Nexus Key Before Updating -> {key}")
                 log.PETC()
                 with open(self.file, 'w') as f:

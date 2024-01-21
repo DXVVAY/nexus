@@ -265,7 +265,7 @@ class Client:
         return cookies
 
     @staticmethod
-    def get_session(token:str):
+    def get_session(token: str, cookie=True):
         typ = config.get("header_typ")
         iv1, iv2 = str(randint(15,16)), str(randint(1,5))
         idents = {
@@ -278,12 +278,13 @@ class Client:
             random_tls_extension_order = True
         )
         
-        cookie = Client.get_cookies(session)
         session.headers = headers
         session.headers.update({"Authorization": token})
-        session.headers.update({
-            "cookie": f"__cfruid={cookie['__cfruid']}; __dcfduid={cookie['__dcfduid']}; __sdcfduid={cookie['__sdcfduid']}",
-        })
+        if cookie:
+            cookie = Client.get_cookies(session)
+            session.headers.update({
+                "cookie": f"__cfruid={cookie['__cfruid']}; __dcfduid={cookie['__dcfduid']}; __sdcfduid={cookie['__sdcfduid']}",
+            })
         session.proxies = {
             "http": f"http://3e8j8h0vylsx49g:54nw544u7iglpsm@rp.proxyscrape.com:6060", 
             "https": f"http://3e8j8h0vylsx49g:54nw544u7iglpsm@rp.proxyscrape.com:6060"
