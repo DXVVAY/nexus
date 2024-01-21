@@ -15,6 +15,7 @@ class Config:
             "use_captcha": True,
             "captcha_typ": "Custom",
             "captcha_key": "",
+            "chatgpt_key": "",
             "debug_mode": False
             }
 
