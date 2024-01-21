@@ -1,7 +1,8 @@
 # Nexus Core!!!
 
 # all imports needed
-from datetime import datetime
+from concurrent.futures import ThreadPoolExecutor
+from datetime import datetime, timedelta
 from random import randint
 from pystyle import Center
 from colorama import Fore
@@ -12,12 +13,14 @@ import websocket
 import threading
 import platform
 import requests
+import keyboard
 import hashlib
 import base64
 import random
 import httpx
-import signal
+import string
 import shutil
+import ctypes
 import json
 import time
 import uuid
@@ -27,8 +30,6 @@ import sys
 import os
 import re
 
-# initially clear the console on start
-import os
 def clear():
     system = os.name
     if system == 'nt':
@@ -38,10 +39,23 @@ def clear():
     return
 clear()
 
-# plugs
 from .plugs.logger import *
 from .plugs.config import *
+
+def set_title(text: str):
+    system = os.name
+    title = f"[Nexus] | [{text}] | [Tokens: {len(config.get_tokens())}] | [Nexus.vin]"
+    if system == 'nt':
+        ctypes.windll.kernel32.SetConsoleTitleW(title)
+    elif system == 'posix':
+        sys.stdout.write(title)
+    #TODO: make a discord rpc later
+
 from .plugs.auth import *
 from .plugs.utils import*
 from .plugs.headers import *
 from .plugs.scraper import *
+
+# functions
+from .funcs.token_joiner import *
+from .funcs.token_leaver import *

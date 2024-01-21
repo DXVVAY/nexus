@@ -47,8 +47,8 @@ class Config:
                 log.info(f"Config file has been updated to the latest and reset.")
                 sleep(2)
 
-    def load(self, file_name):
-        path = os.path.join(file_name)
+    def load(self, f):
+        path = os.path.join(f)
         try:
             with open(path, 'r', encoding='utf-8') as file:
                 return json.load(file)

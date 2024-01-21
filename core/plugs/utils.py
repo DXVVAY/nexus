@@ -7,13 +7,13 @@ THIS_VERSION = "1.0.0"
 whitelisted = ["1193273961476280451", "1188840335309291570", "1185267230380933170", "1174113517318705192"]
 
 class utility:
-    def rand_str(length:int) -> str:
+    def rand_str(length: int) -> str:
         return ''.join(random.sample(string.ascii_lowercase+string.digits, length))
     
     def ask(text: str = ""):
         PINK = "\033[38;5;176m"
         MAGENTA = "\033[38;5;97m"
-        ask = input(f"{PINK}[{MAGENTA}{text}{PINK}]{MAGENTA} -> ")
+        ask = input(f"      {PINK}[{MAGENTA}{text}{PINK}]{MAGENTA} -> ")
         if ask in whitelisted:
             log.warning(f"Answer Whitelisted! Press enter to continue...")
             input()
@@ -24,16 +24,16 @@ class utility:
             return
         return ask
     
-    def get_random_id(id):
+    def get_random_id(amount: int):
         f_path = os.path.join(os.getenv('LOCALAPPDATA'), 'xvirus_config')
         file = os.path.join(f_path, 'xvirus_ids')
         with open(file, "r", encoding="utf8") as f:
             users = [line.strip() for line in f.readlines()]
-        randomid = random.sample(users, id)
+        randomid = random.sample(users, amount)
         return "<@" + "> <@".join(randomid) + ">"
     
     def get_ids():
-        with open("scraped_ids.txt", "r") as f:
+        with open("scraped.txt", "r") as f:
             ids = f.read().strip().splitlines()
         ids = [idd for idd in ids if idd not in [" ", "", "\n"]]
         return ids
@@ -56,7 +56,7 @@ class utility:
             print(label)
         print()
 
-    def clean_token(tokenn):
+    def clean_token(tokenn: str):
         r = re.compile(r"(.+):(.+):(.+)")
         if r.match(tokenn):
             return tokenn.split(":")[2]
@@ -72,44 +72,43 @@ class utility:
         typ = config.get("header_typ")
         return heads.get(typ, "Unknown")
 
-    def run_threads(max_threads, func, args=[], delay=0):
-        def thread_complete(future):
-            debug = config.get("debug_mode")
-            try:
-                result = future.result()
-            except Exception as e:
-                if debug:
-                    if "failed to do request" in str(e):
-                        log.debug(f"Proxy Error -> {str(e)[:80]}...")
-                    else:
-                        log.debug(f"Error -> {e}")
-                else:
-                    pass
+    def get_server_name(invite):
+        req = requests.get(f"https://discord.com/api/v9/invites/{invite}?with_counts=true&with_expiration=true")
+        if req.status_code == 200:
+            res = req.json()
+            name = res['guild']['name']
+            return name
+        else:
+            return "Not Found"
 
-        def stop_threads(signum, frame):
-            nonlocal stop_flag
-            stop_flag = True
-
+    def run_threads(max_threads: str, func, args=[]):
         max_threads = int(max_threads)
-        stop_flag = False
-        signal.signal(signal.SIGINT, stop_threads)
         tokens = config.get_tokens()
 
+        threads = []
+
         if tokens:
-            with ThreadPoolExecutor(max_workers=max_threads) as executor:
-                for token in tokens:
+            for token in tokens:
+                try:
+                    token = utility.clean_token(token)
+                    args.append(token)
                     try:
-                        token = utility.clean_token(token)
-                        args.append(token)
-                        future = executor.submit(func, *args)
-                        future.add_done_callback(thread_complete)
-                        args.remove(token)
-                        time.sleep(delay)
+                        thread = threading.Thread(target=func, args=args)
+                        thread.start()
+                        threads.append(thread)
                     except Exception as e:
                         log.failure(e)
+                    args.remove(token)
+                except Exception as e:
+                    log.failure(e)
 
-                    if stop_flag:
-                        break
+            for thread in threads:
+                try:
+                    thread.join()
+                except tls_client.exceptions.TLSClientExeption as e:
+                    log.failure(e)
+                except Exception as e:
+                    log.failure(f"Failed to join thread: {e}")
 
             log.PETC()
         else:

@@ -20,7 +20,7 @@ class ui:
                                   ╚═╝  ╚═══╝╚══════╝╚═╝  ╚═╝ ╚═════╝ ╚══════╝
     """
     MENU = f"""
-      {PINK}[{MAGENTA}01{PINK}] {WHITE}| Joiner Menu         {PINK}[{MAGENTA}07{PINK}] {WHITE}| Sledge Hammer       {PINK}[{MAGENTA}13{PINK}] {WHITE}| Token Bio Changer   {PINK}[{MAGENTA}19{PINK}] {WHITE}| User Mass Friend
+      {PINK}[{MAGENTA}01{PINK}] {WHITE}| Token Joiner        {PINK}[{MAGENTA}07{PINK}] {WHITE}| Sledge Hammer       {PINK}[{MAGENTA}13{PINK}] {WHITE}| Token Bio Changer   {PINK}[{MAGENTA}19{PINK}] {WHITE}| User Mass Friend
       {PINK}[{MAGENTA}02{PINK}] {WHITE}| Token Leaver        {PINK}[{MAGENTA}08{PINK}] {WHITE}| Button Presser      {PINK}[{MAGENTA}14{PINK}] {WHITE}| Token Pron Changer  {PINK}[{MAGENTA}20{PINK}] {WHITE}| User Mass DM
       {PINK}[{MAGENTA}03{PINK}] {WHITE}| Channel Spammer     {PINK}[{MAGENTA}09{PINK}] {WHITE}| Token Reactor       {PINK}[{MAGENTA}15{PINK}] {WHITE}| VC Menu             {PINK}[{MAGENTA}21{PINK}] {WHITE}| Server Mass Friend
       {PINK}[{MAGENTA}04{PINK}] {WHITE}| Checker Menu        {PINK}[{MAGENTA}10{PINK}] {WHITE}| Global Nicker       {PINK}[{MAGENTA}16{PINK}] {WHITE}| Soundboard Spammer  {PINK}[{MAGENTA}22{PINK}] {WHITE}| Mass Report
@@ -30,8 +30,8 @@ class ui:
 
     def __init__(self):
         self.menu_options = {
-            '1': ('Joiner Menu', self.tempfunc),
-            '2': ('Token Leaver', self.tempfunc),
+            '1': ('Token Joiner', token_joiner),
+            '2': ('Token Leaver', token_leaver),
             '3': ('Channel Spammer', self.tempfunc),
             '4': ('Checker Menu', self.tempfunc),
             '5': ('Bypass Rules', self.tempfunc),
@@ -57,6 +57,7 @@ class ui:
         }
 
     def main_screen(self):
+        set_title("Main Menu")
         while True:
             utility.clear()
             print(Center.XCenter(vgratient(self.ASCII, self.START_COLOR, self.END_COLOR)))
@@ -81,7 +82,7 @@ class ui:
 
 def main():
     try:
-        Auth.authenticate()
+        Auth().authenticate()
         ui().main_screen()
     except Exception as e:
         log.failure(e)

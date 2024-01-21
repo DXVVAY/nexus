@@ -1,10 +1,11 @@
 from .logger import *
 from core import *
 
-file = os.path.join('scraped_ids.txt')
+file = os.path.join('scraped.txt')
 
 class WebSocket(websocket.WebSocketApp): 
-    def __init__(self, token, guild_id, channel_id):
+    def __init__(self, token, guild_id, channel_id, typ="ids"):
+        self.type = typ
         self.MAX_ITER = 10
         self.token = token
         self.guild_id = guild_id
@@ -178,9 +179,14 @@ class WebSocket(websocket.WebSocketApp):
                                                 "id": mem["user"]["id"],
                                             }
                                             if not mem["user"].get("bot"):
-                                                self.members.append(
-                                                    str(mem["user"]["id"])
-                                                )
+                                                if self.type == "ids":
+                                                    self.members.append(
+                                                        str(mem["user"]["id"])
+                                                    )
+                                                else:
+                                                    self.members.append(
+                                                        str(mem["user"]["username"])
+                                                    )
                         elif index == "UPDATE":
                             for item in parsed["updates"][elem]:
                                 if isinstance(item, dict) and "member" in item:
@@ -192,7 +198,10 @@ class WebSocket(websocket.WebSocketApp):
                                         "id": mem["user"]["id"],
                                     }
                                     if not mem["user"].get("bot"):
-                                        self.members.append(str(mem["user"]["id"]))
+                                        if self.type == "ids":
+                                            self.members.append(str(mem["user"]["id"]))
+                                        else:
+                                            self.members.append(str(mem["user"]["username"]))
 
                         self.lastRange += 1
                         self.ranges = self.get_ranges(
@@ -212,10 +221,8 @@ def reset_ids():
     if os.path.exists(file):
         os.remove(file)
 
-def scrape_id(token, guild_id, channel_id):
-        return WebSocket(token, guild_id, channel_id).run()
-
-def id_scraper(guild_id=None, channel_id=None):
+def scraper(guild_id=None, channel_id=None, typ="ids"):
+    set_title(f"Scraping {typ}")
     reset_ids()
     if guild_id is None:
         guild_id = utility.ask("guild id")
@@ -225,10 +232,10 @@ def id_scraper(guild_id=None, channel_id=None):
     
     token = utility.clean_token(config.get_random_token())
     
-    users = scrape_id(token, guild_id, channel_id)
-    with open(file, "w") as f:
+    users = WebSocket(token, guild_id, channel_id, typ).run()
+    with open(file, "w", encoding="utf-8") as f:
         for user in users:
             f.write(f"{user}\n")
     
     print()
-    log.info(f"Scraped {len(users)} ids", "Scraper")
+    log.info(f"Scraped {len(users)} {typ}", "Scraper")
