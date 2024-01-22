@@ -13,7 +13,7 @@ class utility:
     def ask(text: str = ""):
         PINK = "\033[38;5;176m"
         MAGENTA = "\033[38;5;97m"
-        ask = input(f"      {PINK}[{MAGENTA}{text}{PINK}]{MAGENTA} -> ")
+        ask = input(f"  {PINK}[{MAGENTA}{text}{PINK}]{MAGENTA} -> ")
         if ask in whitelisted:
             log.warning(f"Answer Whitelisted! Press enter to continue...")
             input()
@@ -81,7 +81,7 @@ class utility:
         else:
             return "Not Found"
 
-    def run_threads(max_threads: str, func, args=[]):
+    def run_threads(max_threads: str, func: types.FunctionType, args=[]):
         max_threads = int(max_threads)
         tokens = config.get_tokens()
 
@@ -97,18 +97,18 @@ class utility:
                         thread.start()
                         threads.append(thread)
                     except Exception as e:
-                        log.failure(e)
+                        log.failure(f"{e[:70]}")
                     args.remove(token)
                 except Exception as e:
-                    log.failure(e)
+                    log.failure(f"{e[:70]}")
 
             for thread in threads:
                 try:
                     thread.join()
                 except tls_client.exceptions.TLSClientExeption as e:
-                    log.failure(e)
+                    log.failure(f"{e[:70]}")
                 except Exception as e:
-                    log.failure(f"Failed to join thread: {e}")
+                    log.failure(f"{e[:70]}")
 
             log.PETC()
         else:

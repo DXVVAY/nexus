@@ -19,7 +19,7 @@ class logger:
             config = json.load(f)
         timer = config.get('log_timer')
         time_now = f" {self.PINK}[{self.MAGENTA}{self.get_time()}{self.PINK}] {self.WHITE}|" if timer else ""
-        return f"{self.prefix} {self.WHITE}|{time_now} {self.PINK}[{level}{self.PINK}] {self.WHITE}-> {self.PINK}[{self.MAGENTA}{message}{self.PINK}]"
+        return f"  {self.prefix} {self.WHITE}|{time_now} {self.PINK}[{level}{self.PINK}] {self.WHITE}-> {self.PINK}[{self.MAGENTA}{message}{self.PINK}]"
 
     def success(self, message: str, level="Success"):
         print(self.message(f"{self.GREEN}{level}", f"{self.GREEN}{message}"))
@@ -40,7 +40,7 @@ class logger:
         print(self.message(f"{self.BLUE}{level}", f"{self.BLUE}{message}"), end="\r", flush=True,)
     
     def PETC(self):
-        input(f"{self.PINK}[{self.MAGENTA}Press Enter To Continue{self.PINK}]")
+        input(f"  {self.PINK}[{self.MAGENTA}Press Enter To Continue{self.PINK}]")
 
     def errors(self, token: str, res_text: str, res_status_code: int):
         errors = {

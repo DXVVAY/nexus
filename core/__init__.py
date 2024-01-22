@@ -21,6 +21,7 @@ import httpx
 import string
 import shutil
 import ctypes
+import types
 import json
 import time
 import uuid

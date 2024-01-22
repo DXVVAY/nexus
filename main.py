@@ -1,35 +1,9 @@
 from core import *
 
 class ui:
-    WHITE = "\u001b[37m"
-    PINK = "\033[38;5;176m"
-    MAGENTA = "\033[38;5;97m"
-    PINK = "\033[38;5;176m"
-    START_COLOR = [111, 70, 130]
-    END_COLOR = [218, 112, 214]
-
-    ASCII = f"""
-
-
-
-                                  ███╗   ██╗███████╗██╗  ██╗██╗   ██╗███████╗
-                                  ████╗  ██║██╔════╝╚██╗██╔╝██║   ██║██╔════╝ {PINK}[{MAGENTA}Website{PINK}] {WHITE}| Nexus.vin
-                                  ██╔██╗ ██║█████╗   ╚███╔╝ ██║   ██║███████╗ {PINK}[{MAGENTA}Tokens{PINK}]  {WHITE}| {len(config.get_tokens())}
-                                  ██║╚██╗██║██╔══╝   ██╔██╗ ██║   ██║╚════██║ {PINK}[{MAGENTA}Client{PINK}]  {WHITE}| {utility.get_client_type()}
-                                  ██║ ╚████║███████╗██╔╝ ██╗╚██████╔╝███████║ {PINK}[{MAGENTA}Discord{PINK}] {WHITE}| nexustool
-                                  ╚═╝  ╚═══╝╚══════╝╚═╝  ╚═╝ ╚═════╝ ╚══════╝
-    """
-    MENU = f"""
-      {PINK}[{MAGENTA}01{PINK}] {WHITE}| Token Joiner        {PINK}[{MAGENTA}07{PINK}] {WHITE}| Sledge Hammer       {PINK}[{MAGENTA}13{PINK}] {WHITE}| Token Bio Changer   {PINK}[{MAGENTA}19{PINK}] {WHITE}| User Mass Friend
-      {PINK}[{MAGENTA}02{PINK}] {WHITE}| Token Leaver        {PINK}[{MAGENTA}08{PINK}] {WHITE}| Button Presser      {PINK}[{MAGENTA}14{PINK}] {WHITE}| Token Pron Changer  {PINK}[{MAGENTA}20{PINK}] {WHITE}| User Mass DM
-      {PINK}[{MAGENTA}03{PINK}] {WHITE}| Channel Spammer     {PINK}[{MAGENTA}09{PINK}] {WHITE}| Token Reactor       {PINK}[{MAGENTA}15{PINK}] {WHITE}| VC Menu             {PINK}[{MAGENTA}21{PINK}] {WHITE}| Server Mass Friend
-      {PINK}[{MAGENTA}04{PINK}] {WHITE}| Checker Menu        {PINK}[{MAGENTA}10{PINK}] {WHITE}| Global Nicker       {PINK}[{MAGENTA}16{PINK}] {WHITE}| Soundboard Spammer  {PINK}[{MAGENTA}22{PINK}] {WHITE}| Mass Report
-      {PINK}[{MAGENTA}05{PINK}] {WHITE}| Bypass Rules        {PINK}[{MAGENTA}11{PINK}] {WHITE}| Server Nicker       {PINK}[{MAGENTA}17{PINK}] {WHITE}| Token Typer         {PINK}[{MAGENTA}23{PINK}] {WHITE}| Mass Thread
-      {PINK}[{MAGENTA}06{PINK}] {WHITE}| Restorecord Bypass  {PINK}[{MAGENTA}12{PINK}] {WHITE}| Hypesquad Changer   {PINK}[{MAGENTA}18{PINK}] {WHITE}| Forum Spammer       {PINK}[{MAGENTA}24{PINK}] {WHITE}| Webhook Tool
-    """
-
+ 
     def __init__(self):
-        self.menu_options = {
+        self.menu_ops = {
             '1': ('Token Joiner', token_joiner),
             '2': ('Token Leaver', token_leaver),
             '3': ('Channel Spammer', token_spammer),
@@ -45,7 +19,7 @@ class ui:
             '13': ('Token Bio Changer', self.tempfunc),
             '14': ('Token Pron Changer', self.tempfunc),
             '15': ('VC Menu', self.tempfunc),
-            '16': ('Soundboard Spammer', self.tempfunc),
+            '16': ('Soundboard Spam', self.tempfunc),
             '17': ('Token Typer', self.tempfunc),
             '18': ('Forum Spammer', self.tempfunc),
             '19': ('User Mass Friend', self.tempfunc),
@@ -55,16 +29,47 @@ class ui:
             '23': ('Mass Thread', self.tempfunc),
             '24': ('Webhook Tool', self.tempfunc),
         }
+        self.WHITE = "\u001b[37m"
+        self.PINK = "\033[38;5;176m"
+        self.MAGENTA = "\033[38;5;97m"
+        self.START_COLOR = [111, 70, 130]
+        self.END_COLOR = [218, 112, 214]
+
+        self.ASCII = f"""
+
+
+
+                                   ███╗   ██╗███████╗██╗  ██╗██╗   ██╗███████╗
+                                   ████╗  ██║██╔════╝╚██╗██╔╝██║   ██║██╔════╝ {self.PINK}[{self.MAGENTA}Website{self.PINK}] {self.WHITE}| Nexus.vin
+                                   ██╔██╗ ██║█████╗   ╚███╔╝ ██║   ██║███████╗ {self.PINK}[{self.MAGENTA}Tokens{self.PINK}]  {self.WHITE}| {len(config.get_tokens())}
+                                   ██║╚██╗██║██╔══╝   ██╔██╗ ██║   ██║╚════██║ {self.PINK}[{self.MAGENTA}Client{self.PINK}]  {self.WHITE}| {utility.get_client_type()}
+                                   ██║ ╚████║███████╗██╔╝ ██╗╚██████╔╝███████║ {self.PINK}[{self.MAGENTA}Discord{self.PINK}] {self.WHITE}| nexustool
+                                   ╚═╝  ╚═══╝╚══════╝╚═╝  ╚═╝ ╚═════╝ ╚══════╝
+        """
+        
+    def make_menu(self):
+        str = ""
+        keys = list(self.menu_ops.keys())
+        for i in range(6):
+            for j in range(i, len(self.menu_ops), 6):
+                key = keys[j]
+                label, _ = self.menu_ops[key]
+                str += f"  {self.PINK}[{self.MAGENTA}{key.zfill(2)}{self.PINK}] {self.WHITE}| {label.ljust(21)}"
+            str += "\n"
+        return str
 
     def main_screen(self):
         set_title("Main Menu")
         while True:
             utility.clear()
             print(Center.XCenter(vgratient(self.ASCII, self.START_COLOR, self.END_COLOR)))
-            print(Center.XCenter(self.MENU))
+            print(Center.XCenter(self.make_menu()))
+
             while True:
-                cc = input(f"      {self.PINK}[{self.MAGENTA}Choice{self.PINK}]{self.MAGENTA} -> ")
-                if cc in self.menu_options:
+                print()
+                ch = input(f"  {self.PINK}[{self.MAGENTA}Choice{self.PINK}]{self.MAGENTA} -> ").lstrip("0")
+                cc = ch.upper()
+                if cc in self.menu_ops:
                     choice = cc
                     break
                 else:
@@ -72,7 +77,7 @@ class ui:
                     sleep(1)
                     self.main_screen()
 
-            _, func = self.menu_options[choice]
+            _, func = self.menu_ops[choice]
             func()
 
     def tempfunc(self):

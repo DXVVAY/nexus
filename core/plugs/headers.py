@@ -213,7 +213,7 @@ def get_headers():
     if typ == "":
         log.info("No Headers Type Selected, Please Choose One")
         make_menu("Window Headers", "IOS Headers")
-        head = input(f"{PINK}[{MAGENTA}Choice{PINK}]{MAGENTA} -> ")
+        head = input(f"  {PINK}[{MAGENTA}Choice{PINK}]{MAGENTA} -> ")
         choice_map = {
             "1": "win",
             "2": "ios"
@@ -265,11 +265,11 @@ class Client:
         if cookie:
             cookie = Client.get_cookies(session)
             session.headers.update({
-                "cookie": f"__cfruid={cookie['__cfruid']}; __dcfduid={cookie['__dcfduid']}; __sdcfduid={cookie['__sdcfduid']}",
+                "cookie": f"__cfruid={cookie['__cfruid']}; __sdcfduid={cookie['__sdcfduid']}",
             })
-        session.proxies = {
-            "http": f"http://3e8j8h0vylsx49g:54nw544u7iglpsm@rp.proxyscrape.com:6060", 
-            "https": f"http://3e8j8h0vylsx49g:54nw544u7iglpsm@rp.proxyscrape.com:6060"
-        }
+#        session.proxies = {
+#            "http": f"http://3e8j8h0vylsx49g:54nw544u7iglpsm@rp.proxyscrape.com:6060", 
+#            "https": f"http://3e8j8h0vylsx49g:54nw544u7iglpsm@rp.proxyscrape.com:6060"
+#        }
 
         return session
