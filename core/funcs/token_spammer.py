@@ -1,6 +1,6 @@
 from core import *
 
-def send(token: str, message: str, channel_id: str, massping: str, amount=None):
+def send(message: str, channel_id: str, massping: str, amount: str, token: str):
     if massping == 'y':
         content = f"{message} - {utility.get_random_id(int(amount))} - {utility.rand_str(7)}"
     else:
@@ -19,30 +19,12 @@ def token_spammer():
     channel_id = utility.ask("Channel ID")
     massping = utility.ask("Massping (y/n)")
     amount = 0
-    
     if massping == 'y':
         guild_id = utility.ask("Guild ID")
         scraper(guild_id, channel_id, typ="ids")
         ids = utility.get_ids()
         amount = utility.ask(f"Amount Of pings (Don't exceed {len(ids)})")
-    
+
+    thread = utility.ask("Thread Count")
     while True:
-        if tokens:
-            def thread_send(token):
-                try:
-                    token = utility.clean_token(token)
-                    args = [token, message, channel_id, massping, amount]
-                    send(*args)
-                except Exception as e:
-                    log.failure(e)
-
-            threads = []
-            for token in tokens:
-                thread = threading.Thread(target=thread_send, args=(token,))
-                thread.start()
-                threads.append(thread)
-
-            for thread in threads:
-                thread.join()
-        else:
-            return
+        utility.run_threads(max_threads=thread, func=send, args = [message, channel_id, massping, amount], petc=False)

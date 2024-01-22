@@ -25,10 +25,7 @@ class utility:
         return ask
     
     def get_random_id(amount: int):
-        f_path = os.path.join(os.getenv('LOCALAPPDATA'), 'xvirus_config')
-        file = os.path.join(f_path, 'xvirus_ids')
-        with open(file, "r", encoding="utf8") as f:
-            users = [line.strip() for line in f.readlines()]
+        users = utility.get_ids()
         randomid = random.sample(users, amount)
         return "<@" + "> <@".join(randomid) + ">"
     
@@ -81,36 +78,35 @@ class utility:
         else:
             return "Not Found"
 
-    def run_threads(max_threads: str, func: types.FunctionType, args=[]):
+    def run_threads(max_threads: str, func: types.FunctionType, args=[], petc=True):
         max_threads = int(max_threads)
         tokens = config.get_tokens()
 
-        threads = []
-
         if tokens:
-            for token in tokens:
-                try:
-                    token = utility.clean_token(token)
-                    args.append(token)
+            with ThreadPoolExecutor(max_workers=max_threads) as executor:
+                futures = []
+                for token in tokens:
                     try:
-                        thread = threading.Thread(target=func, args=args)
-                        thread.start()
-                        threads.append(thread)
+                        token = utility.clean_token(token)
+                        args.append(token)
+                        try:
+                            future = executor.submit(func, *args)
+                            futures.append(future)
+                        except Exception as e:
+                            log.failure(f"{str(e)[:70]}")
+                        args.remove(token)
                     except Exception as e:
-                        log.failure(f"{e[:70]}")
-                    args.remove(token)
-                except Exception as e:
-                    log.failure(f"{e[:70]}")
+                        log.failure(f"{str(e)[:70]}")
 
-            for thread in threads:
-                try:
-                    thread.join()
-                except tls_client.exceptions.TLSClientExeption as e:
-                    log.failure(f"{e[:70]}")
-                except Exception as e:
-                    log.failure(f"{e[:70]}")
-
-            log.PETC()
+                for future in futures:
+                    try:
+                        future.result()
+                    except tls_client.exceptions.TLSClientExeption as e:
+                        log.failure(f"{str(e)[:70]}")
+                    except Exception as e:
+                        log.failure(f"{str(e)[:70]}")
+                if petc:
+                    log.PETC()
         else:
             log.warning("No tokens were found in tokens.txt")
             log.PETC()

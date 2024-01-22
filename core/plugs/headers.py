@@ -235,18 +235,6 @@ headers = get_headers()
 
 class Client:
     @staticmethod
-    def get_cookies(session):
-        cookies = dict(
-            session.get("https://discord.com").cookies
-        )
-        cookies["__cf_bm"] = (
-            "0duPxpWahXQbsel5Mm.XDFj_eHeCKkMo.T6tkBzbIFU-1679837601-0-"
-            "AbkAwOxGrGl9ZGuOeBGIq4Z+ss0Ob5thYOQuCcKzKPD2xvy4lrAxEuRAF1Kopx5muqAEh2kLBLuED6s8P0iUxfPo+IeQId4AS3ZX76SNC5F59QowBDtRNPCHYLR6+2bBFA=="
-        )
-        cookies["locale"] = "en-US"
-        return cookies
-
-    @staticmethod
     def get_session(token: str, cookie=True):
         typ = config.get("header_typ")
         iv1, iv2 = str(randint(15,16)), str(randint(1,5))
@@ -263,10 +251,7 @@ class Client:
         session.headers = headers
         session.headers.update({"Authorization": token})
         if cookie:
-            cookie = Client.get_cookies(session)
-            session.headers.update({
-                "cookie": f"__cfruid={cookie['__cfruid']}; __sdcfduid={cookie['__sdcfduid']}",
-            })
+            session.cookies = session.get("https://discord.com").cookies
 #        session.proxies = {
 #            "http": f"http://3e8j8h0vylsx49g:54nw544u7iglpsm@rp.proxyscrape.com:6060", 
 #            "https": f"http://3e8j8h0vylsx49g:54nw544u7iglpsm@rp.proxyscrape.com:6060"
