@@ -9,7 +9,7 @@ def bchanger(bio: str, token: str):
         log.errors(token, result.text, result.status_code)
 
 def bio_changer():
-    set_title("Token Joiner")
+    set_title("Bio Changer")
     bio = utility.ask("Bio")
     thread = utility.ask("Thread Count")
     utility.run_threads(max_threads=thread, func=bchanger, args=[bio])
