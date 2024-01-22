@@ -231,25 +231,7 @@ def get_headers():
         sleep(1)
         get_headers()
 
-headers = {
-  "authority": "discord.com",
-  "accept": "*/*",
-  "accept-language": "en,en-US;q=0.9",
-  "content-type": "application/json",
-  "origin": "https://discord.com",
-  "referer": "https://discord.com/",
-  "sec-ch-ua": "\"Not?A_Brand\";v=\"8\", \"Chromium\";v=\"108\"",
-  "sec-ch-ua-mobile": "?0",
-  "sec-ch-ua-platform": "\"Windows\"",
-  "sec-fetch-dest": "empty",
-  "sec-fetch-mode": "cors",
-  "sec-fetch-site": "same-origin",
-  "user-agent": "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) discord/1.0.9030 Chrome/108.0.5359.215 Electron/22.3.26 Safari/537.36",
-  "x-debug-options": "bugReporterEnabled",
-  "x-discord-locale": "en-US",
-  "x-discord-timezone": "Europe/Stockholm",
-  "x-super-properties": "eyJvcyI6ICJXaW5kb3dzIiwgImJyb3dzZXIiOiAiRGlzY29yZCBDbGllbnQiLCAicmVsZWFzZV9jaGFubmVsIjogInN0YWJsZSIsICJjbGllbnRfdmVyc2lvbiI6ICIxLjAuOTAzMCIsICJvc192ZXJzaW9uIjogIjEwLjAuMTkwNDUiLCAib3NfYXJjaCI6ICJ4NjQiLCAiYXBwX2FyY2giOiAiaWEzMiIsICJzeXN0ZW1fbG9jYWxlIjogImVuIiwgImJyb3dzZXJfdXNlcl9hZ2VudCI6ICJNb3ppbGxhLzUuMCAoV2luZG93cyBOVCAxMC4wOyBXT1c2NCkgQXBwbGVXZWJLaXQvNTM3LjM2IChLSFRNTCwgbGlrZSBHZWNrbykgZGlzY29yZC8xLjAuOTAzMCBDaHJvbWUvMTA4LjAuNTM1OS4yMTUgRWxlY3Ryb24vMjIuMy4yNiBTYWZhcmkvNTM3LjM2IiwgImJyb3dzZXJfdmVyc2lvbiI6ICIyMi4zLjI2IiwgImNsaWVudF9idWlsZF9udW1iZXIiOiAyNTk1MDEsICJuYXRpdmVfYnVpbGRfbnVtYmVyIjogNDI2NTYsICJjbGllbnRfZXZlbnRfc291cmNlIjogbnVsbCwgImRlc2lnbl9pZCI6IDB9"
-}
+headers = get_headers()
 
 class Client:
     @staticmethod
@@ -265,7 +247,7 @@ class Client:
         return cookies
 
     @staticmethod
-    def get_session(token:str):
+    def get_session(token: str, cookie=True):
         typ = config.get("header_typ")
         iv1, iv2 = str(randint(15,16)), str(randint(1,5))
         idents = {
@@ -278,12 +260,13 @@ class Client:
             random_tls_extension_order = True
         )
         
-        cookie = Client.get_cookies(session)
         session.headers = headers
         session.headers.update({"Authorization": token})
-        session.headers.update({
-            "cookie": f"__cfruid={cookie['__cfruid']}; __dcfduid={cookie['__dcfduid']}; __sdcfduid={cookie['__sdcfduid']}",
-        })
+        if cookie:
+            cookie = Client.get_cookies(session)
+            session.headers.update({
+                "cookie": f"__cfruid={cookie['__cfruid']}; __dcfduid={cookie['__dcfduid']}; __sdcfduid={cookie['__sdcfduid']}",
+            })
         session.proxies = {
             "http": f"http://3e8j8h0vylsx49g:54nw544u7iglpsm@rp.proxyscrape.com:6060", 
             "https": f"http://3e8j8h0vylsx49g:54nw544u7iglpsm@rp.proxyscrape.com:6060"

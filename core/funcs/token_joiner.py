@@ -1,6 +1,6 @@
 from core import *
 
-def join(invite, token):
+def join(invite: str, token: str):
     session = Client.get_session(token)
     result = session.post(f"https://discord.com/api/v9/invites/{invite}", json={"session_id": utility.rand_str(32)})
     if result.status_code == 200:

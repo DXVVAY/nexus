@@ -10,7 +10,7 @@ class WebSocket(websocket.WebSocketApp):
         self.token = token
         self.guild_id = guild_id
         self.channel_id = channel_id
-        self.current_session = client.get_session()
+        self.current_session = Client.get_session("")
         self.socket_headers = {
             "Accept-Language": self.current_session.headers["accept-language"],
             "Cache-Control": "no-cache",
@@ -215,7 +215,7 @@ class WebSocket(websocket.WebSocketApp):
                 if self.endScraping:
                     self.close()
         except Exception as e:
-            print(f"Error: {e}")
+            print(e)
 
 def reset_ids():
     if os.path.exists(file):
