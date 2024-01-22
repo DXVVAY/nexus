@@ -16,7 +16,7 @@ class ui:
             '10': ('Global Nicker', self.tempfunc),
             '11': ('Server Nicker', self.tempfunc),
             '12': ('Hypesquad Changer', self.tempfunc),
-            '13': ('Token Bio Changer', self.tempfunc),
+            '13': ('Token Bio Changer', bio_changer),
             '14': ('Token Pron Changer', self.tempfunc),
             '15': ('VC Menu', self.tempfunc),
             '16': ('Soundboard Spam', self.tempfunc),

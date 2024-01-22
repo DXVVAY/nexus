@@ -61,3 +61,4 @@ from .plugs.scraper import *
 from .funcs.token_joiner import *
 from .funcs.token_leaver import *
 from .funcs.token_spammer import *
+from .funcs.bio_changer import *
