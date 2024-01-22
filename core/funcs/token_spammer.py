@@ -1,8 +1,8 @@
 from core import *
 
-def tspammer(channel_id, token, message):
+def tspammer(channel_id, message, token):
     session = Client.get_session(token)
-    result = session.delete(f"https://discord.com/api/v9/channels/{channel_id}/messages", json={"content": message, "flags": 0, "mobile_network_type": "unknown", "tts": False})
+    result = session.post(f"https://discord.com/api/v9/channels/{channel_id}/messages", json={"content": message, "flags": 0, "mobile_network_type": "unknown", "tts": False})
     if result.status_code == 204:
         log.success(f"{token[:50]}", "Sent messagt")
     else:
