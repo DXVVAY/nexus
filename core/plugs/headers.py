@@ -16,25 +16,21 @@ def make_menu(*options):
 
 class IOS_headers:
     def __init__(self):
+        s = time.time()
         self.build_number = None
         self.darwin_ver = self.get_darwin_version()
         self.iv1, self.iv2 = str(randint(15, 16)), str(randint(1, 5))
         self.app_version = self.get_app_version()
         set_title("Getting Discord IOS Info")
         log.info(f"Getting Discord IOS Info")
-        sleep(0.2)
         self.build_number = self.get_build_number()
         self.user_agent = f"Discord/{self.build_number} CFNetwork/1402.0.8 Darwin/{self.darwin_ver}"
         log.info(self.build_number, "Build Number")
-        sleep(0.2)
         log.info(self.darwin_ver, "Darwin Version")
-        sleep(0.2)
         log.info(self.app_version, "App Version")
-        sleep(0.2)
         log.info(self.user_agent, "User Agent")
-        sleep(0.5)
-        log.info(f"Successfully Built Headers")
-        sleep(1)
+        rn = str(time.time() - s)
+        log.info(f"Successfully Built Headers In {rn[:5]} Seconds"); sleep(2)
         self.x_super_properties = self.mobile_xprops()
         self.dict = self.returner()
 
@@ -100,29 +96,36 @@ class IOS_headers:
 
 class WIN_headers:
     def __init__(self):
+        s = time.time()
         set_title("Getting Discord Desktop Info")
         log.info(f"Getting Discord Desktop Info")
         sleep(0.2)
         self.native_buildd = self.native_build()
         self.main_versiond = self.main_version()
         self.client_buildd = self.client_build()
-        self.chrome = "108.0.5359.215"
+        self.chrome = WIN_headers.chrome_version()
         self.electron = "22.3.26"
         self.safari = "537.36"
         self.os_version = "10.0.19045"
         self.user_agent = f"Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/{self.safari} (KHTML, like Gecko) discord/{self.main_versiond} Chrome/{self.chrome} Electron/{self.electron} Safari/{self.safari}"
         log.info(self.client_buildd, "Build Number")
-        sleep(0.2)
         log.info(self.native_buildd, "Native Build")
-        sleep(0.2)
         log.info(self.main_versiond, "App Version")
-        sleep(0.2)
+        log.info(self.chrome, "Chrome Version")
         log.info(f"{self.user_agent[:70]}...", "User Agent")
-        sleep(0.5)
-        log.info(f"Successfully Built Headers")
-        sleep(1)
+        rn = str(time.time() - s)
+        log.info(f"Successfully Built Headers In {rn[:5]} Seconds"); sleep(2)
         self.x_super_properties = self.desktop_xprops()
         self.dict = self.returner()
+
+    @staticmethod
+    def chrome_version():
+        try:
+            r = requests.get("https://versionhistory.googleapis.com/v1/chrome/platforms/linux/channels/stable/versions")
+            data = json.loads(r.text)
+            return data['versions'][0]['version']
+        except Exception:
+            return "108.0.5359.215"
 
     def desktop_xprops(self):
         return base64.b64encode(json.dumps({
@@ -236,11 +239,12 @@ headers = get_headers()
 class Client:
     @staticmethod
     def get_session(token: str, cookie=True):
+        cv = WIN_headers.chrome_version()
         typ = config.get("header_typ")
         iv1, iv2 = str(randint(15,16)), str(randint(1,5))
         idents = {
             "ios": f"safari_ios_{iv1}_{iv2}",
-            "win": "chrome_108"
+            "win": f"chrome_{cd[:3]}"
         }
         ident = idents.get(typ)
         session = tls_client.Session(
@@ -252,9 +256,10 @@ class Client:
         session.headers.update({"Authorization": token})
         if cookie:
             session.cookies = session.get("https://discord.com").cookies
-        session.proxies = {
-            "http": f"http://3e8j8h0vylsx49g:54nw544u7iglpsm@rp.proxyscrape.com:6060", 
-            "https": f"http://3e8j8h0vylsx49g:54nw544u7iglpsm@rp.proxyscrape.com:6060"
-        }
+            
+        #session.proxies = {
+        #    "http": f"http://3e8j8h0vylsx49g:54nw544u7iglpsm@rp.proxyscrape.com:6060", 
+        #    "https": f"http://3e8j8h0vylsx49g:54nw544u7iglpsm@rp.proxyscrape.com:6060"
+        #}
 
         return session

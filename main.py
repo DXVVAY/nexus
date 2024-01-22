@@ -39,12 +39,12 @@ class ui:
 
 
 
-                                      ███╗   ██╗███████╗██╗  ██╗██╗   ██╗███████╗
-                                      ████╗  ██║██╔════╝╚██╗██╔╝██║   ██║██╔════╝ {self.PINK}[{self.MAGENTA}Website{self.PINK}] {self.WHITE}| Nexus.vin
-                                      ██╔██╗ ██║█████╗   ╚███╔╝ ██║   ██║███████╗ {self.PINK}[{self.MAGENTA}Tokens{self.PINK}]  {self.WHITE}| {len(config.get_tokens())}
-                                      ██║╚██╗██║██╔══╝   ██╔██╗ ██║   ██║╚════██║ {self.PINK}[{self.MAGENTA}Client{self.PINK}]  {self.WHITE}| {utility.get_client_type()}
-                                      ██║ ╚████║███████╗██╔╝ ██╗╚██████╔╝███████║ {self.PINK}[{self.MAGENTA}Discord{self.PINK}] {self.WHITE}| nexustool
-                                      ╚═╝  ╚═══╝╚══════╝╚═╝  ╚═╝ ╚═════╝ ╚══════╝
+                                   ███╗   ██╗███████╗██╗  ██╗██╗   ██╗███████╗
+                                   ████╗  ██║██╔════╝╚██╗██╔╝██║   ██║██╔════╝ {self.PINK}[{self.MAGENTA}Website{self.PINK}] {self.WHITE}| Nexus.vin
+                                   ██╔██╗ ██║█████╗   ╚███╔╝ ██║   ██║███████╗ {self.PINK}[{self.MAGENTA}Tokens{self.PINK}]  {self.WHITE}| {len(config.get_tokens())}
+                                   ██║╚██╗██║██╔══╝   ██╔██╗ ██║   ██║╚════██║ {self.PINK}[{self.MAGENTA}Client{self.PINK}]  {self.WHITE}| {utility.get_client_type()}
+                                   ██║ ╚████║███████╗██╔╝ ██╗╚██████╔╝███████║ {self.PINK}[{self.MAGENTA}Discord{self.PINK}] {self.WHITE}| nexustool
+                                   ╚═╝  ╚═══╝╚══════╝╚═╝  ╚═╝ ╚═════╝ ╚══════╝
         """
         
     def make_menu(self):
