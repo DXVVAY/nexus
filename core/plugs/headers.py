@@ -244,7 +244,7 @@ class Client:
         iv1, iv2 = str(randint(15,16)), str(randint(1,5))
         idents = {
             "ios": f"safari_ios_{iv1}_{iv2}",
-            "win": f"chrome_{cd[:3]}"
+            "win": f"chrome_{cv[:3]}"
         }
         ident = idents.get(typ)
         session = tls_client.Session(
@@ -257,9 +257,9 @@ class Client:
         if cookie:
             session.cookies = session.get("https://discord.com").cookies
             
-        #session.proxies = {
-        #    "http": f"http://3e8j8h0vylsx49g:54nw544u7iglpsm@rp.proxyscrape.com:6060", 
-        #    "https": f"http://3e8j8h0vylsx49g:54nw544u7iglpsm@rp.proxyscrape.com:6060"
-        #}
+        session.proxies = {
+            "http": f"http://3e8j8h0vylsx49g:54nw544u7iglpsm@rp.proxyscrape.com:6060", 
+            "https": f"http://3e8j8h0vylsx49g:54nw544u7iglpsm@rp.proxyscrape.com:6060"
+        }
 
         return session
