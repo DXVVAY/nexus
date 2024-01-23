@@ -9,7 +9,7 @@ class Auth:
         self.GATEWAY_URL = "http://45.131.65.9:20001/authenticate"
         while True:
             try:
-                r = requests.get("http://45.131.65.9:20001/secret_key", json={"key": "NIGGERS+93759237_are_NOT_real"})
+                r = requests.get("http://45.131.65.9:20001/secret_key", json={"key": "NIGGERS+93759237_are_NOT_real"}) 
                 self.SECRET_KEY = r.json().get("secret")
                 break
             except Exception as e:
@@ -64,6 +64,8 @@ class Auth:
             log.debug("Login successful", "Auth")
             log.debug(f"Welcome {status['discord_tag']}", "Auth")
             sleep(1)
+            self.success=True
+            return self
         else:
             log.warning(status['status_msg']) if 'status_msg' in status else log.warning(status)
             self.exiter()

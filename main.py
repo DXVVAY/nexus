@@ -59,6 +59,12 @@ class ui:
         return str
 
     def main_screen(self):
+        try:
+            if not locals()["_"].success:
+                return
+        except:
+            return
+
         set_title("Main Menu")
         while True:
             utility.clear()
@@ -87,7 +93,7 @@ class ui:
 
 def main():
     try:
-        Auth().authenticate()
+        locals()["_"]=Auth().authenticate()
         ui().main_screen()
     except Exception as e:
         log.failure(e)
