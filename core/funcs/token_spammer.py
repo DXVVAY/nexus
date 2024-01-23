@@ -8,7 +8,7 @@ def send(message: str, channel_id: str, massping: str, amount: str, token: str):
     session = Client.get_session(token, cookie=False)
     result = session.post(f"https://discord.com/api/v9/channels/{channel_id}/messages", json={'session_id': utility.rand_str(32), "content": content})
     if result.status_code == 200:
-        log.success(f"{token[:50]}", "Sent messagt")
+        log.success(f"{token[:50]}", "Sent message")
     else:
         log.errors(token, result.text, result.status_code)
 
