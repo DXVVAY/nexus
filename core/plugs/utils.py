@@ -21,7 +21,7 @@ class utility:
         elif ask == "back":
             log.info(f"Going Back")
             sleep(2)
-            return
+            return 
         return ask
     
     def get_random_id(amount: int):
