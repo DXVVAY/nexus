@@ -27,7 +27,7 @@ class ui:
             '21': ('Server Mass Friend', self.tempfunc),
             '22': ('Mass Report', self.tempfunc),
             '23': ('Mass Thread', self.tempfunc),
-            '24': ('Webhook Tool', self.tempfunc),
+            '24': ('Server booster', self.tempfunc),
         }
         self.WHITE = "\u001b[37m"
         self.PINK = "\033[38;5;176m"
