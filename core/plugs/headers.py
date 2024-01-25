@@ -258,9 +258,9 @@ class Client:
         if cookie:
             session.cookies = session.get("https://discord.com").cookies
             
-        session.proxies = {
-            "http": f"http://3e8j8h0vylsx49g:54nw544u7iglpsm@rp.proxyscrape.com:6060", 
-            "https": f"http://3e8j8h0vylsx49g:54nw544u7iglpsm@rp.proxyscrape.com:6060"
-        }
+        #session.proxies = {
+        #    "http": f"http://3e8j8h0vylsx49g:54nw544u7iglpsm@rp.proxyscrape.com:6060", 
+        #    "https": f"http://3e8j8h0vylsx49g:54nw544u7iglpsm@rp.proxyscrape.com:6060"
+        #}
 
         return session

@@ -269,7 +269,7 @@ def scraper(guild_id=None, channel_id=None, typ="ids"):
     if channel_id is None:
         channel_id = utility.ask("channel id")
     
-    token = utility.clean_token(config.get_random_token())
+    token = utility.guild_token(guild_id)
     
     users = WebSocket(token, guild_id, channel_id, typ).run()
     with open(file, "w", encoding="utf-8") as f:

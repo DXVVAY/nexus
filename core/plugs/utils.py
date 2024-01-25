@@ -94,6 +94,21 @@ class utility:
         else:
             return "Not Found"
 
+    def guild_token(guild_id):
+        tokens = config.get_tokens()
+        for token in tokens:
+            token = utility.clean_token(token)
+            session = Client.get_session(token)
+            r = session.get(f"https://discord.com/api/v9/guilds/{guild_id}")
+            if r.status_code == 200:
+                log.success(f"{token[:50]} Is in the guild", "Scraper")
+                return token
+            else:
+                log.scraper(f"{token[:50]} Is not in guild")
+        print()
+        log.warning("No tokens in guild!", "Scraper")
+        return None
+
     def run_threads(max_threads: str, func: types.FunctionType, args=[], petc=True):
         max_threads = int(max_threads)
         tokens = config.get_tokens()
