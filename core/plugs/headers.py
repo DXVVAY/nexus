@@ -217,23 +217,24 @@ def get_headers():
         log.info("No Headers Type Selected, Please Choose One")
         make_menu("Window Headers", "IOS Headers")
         head = input(f"  {PINK}[{MAGENTA}Choice{PINK}]{MAGENTA} -> ")
-        choice_map = {
+        map = {
             "1": "win",
             "2": "ios"
         }
-        if head in choice_map:
-            config._set("header_typ", choice_map[head])
+        if head in map:
+            config._set("header_typ", map[head])
+            typ = map[head]
         else:
             log.failure("Invalid Option")
             sleep(1)
-            get_headers()
-    elif typ in heads:
+            return get_headers()
+    if typ in heads:
         return heads[typ]()()
     else:
         log.failure("Invalid Option")
         sleep(1)
-        get_headers()
-
+        return get_headers()
+    
 headers = get_headers()
 
 class Client:
