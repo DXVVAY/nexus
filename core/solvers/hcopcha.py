@@ -4,7 +4,7 @@ from .headers import *
 from core import *
 
 class Solvers: 
-    def solve(self, solver_key, site_key : str, site_url : str) -> None:
+    def solve(self, solver_key, site_key: str, site_url: str) -> None:
         print(self.key)
     
     def get_balance(self):
