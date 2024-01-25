@@ -3,6 +3,7 @@
 # all imports needed
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timedelta
+from decimal import Decimal
 from random import randint
 from pystyle import Center
 from colorama import Fore
@@ -63,3 +64,6 @@ from .funcs.token_leaver import *
 from .funcs.token_spammer import *
 from .funcs.bio_changer import *
 from .funcs.pron_changer import *
+
+# bypasses
+from .bypass.sledge_hammer import *

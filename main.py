@@ -1,7 +1,6 @@
 from core import *
 
 class ui:
- 
     def __init__(self):
         self.menu_ops = {
             '1': ('Token Joiner', token_joiner),
@@ -10,7 +9,7 @@ class ui:
             '4': ('Checker Menu', self.tempfunc),
             '5': ('Bypass Rules', self.tempfunc),
             '6': ('Restorecord Bypass', self.tempfunc),
-            '7': ('Sledge Hammer', self.tempfunc),
+            '7': ('Sledge Hammer', sledge_hammer),
             '8': ('Button Presser', self.tempfunc),
             '9': ('Token Reactor', self.tempfunc),
             '10': ('Global Nicker', self.tempfunc),
@@ -39,22 +38,21 @@ class ui:
 
 
 
-                                   ███╗   ██╗███████╗██╗  ██╗██╗   ██╗███████╗
-                                   ████╗  ██║██╔════╝╚██╗██╔╝██║   ██║██╔════╝ {self.PINK}[{self.MAGENTA}Website{self.PINK}] {self.WHITE}| Nexus.vin
-                                   ██╔██╗ ██║█████╗   ╚███╔╝ ██║   ██║███████╗ {self.PINK}[{self.MAGENTA}Tokens{self.PINK}]  {self.WHITE}| {len(config.get_tokens())}
-                                   ██║╚██╗██║██╔══╝   ██╔██╗ ██║   ██║╚════██║ {self.PINK}[{self.MAGENTA}Client{self.PINK}]  {self.WHITE}| {utility.get_client_type()}
-                                   ██║ ╚████║███████╗██╔╝ ██╗╚██████╔╝███████║ {self.PINK}[{self.MAGENTA}Discord{self.PINK}] {self.WHITE}| nexustool
-                                   ╚═╝  ╚═══╝╚══════╝╚═╝  ╚═╝ ╚═════╝ ╚══════╝
+                                 ███╗   ██╗███████╗██╗  ██╗██╗   ██╗███████╗
+                                 ████╗  ██║██╔════╝╚██╗██╔╝██║   ██║██╔════╝ {self.PINK}[{self.MAGENTA}Website{self.PINK}] {self.WHITE}| Nexus.vin
+                                 ██╔██╗ ██║█████╗   ╚███╔╝ ██║   ██║███████╗ {self.PINK}[{self.MAGENTA}Tokens{self.PINK}]  {self.WHITE}| {len(config.get_tokens())}
+                                 ██║╚██╗██║██╔══╝   ██╔██╗ ██║   ██║╚════██║ {self.PINK}[{self.MAGENTA}Client{self.PINK}]  {self.WHITE}| {utility.get_client_type()}
+                                 ██║ ╚████║███████╗██╔╝ ██╗╚██████╔╝███████║ {self.PINK}[{self.MAGENTA}Discord{self.PINK}] {self.WHITE}| nexustool
+                                 ╚═╝  ╚═══╝╚══════╝╚═╝  ╚═╝ ╚═════╝ ╚══════╝
         """
         
     def make_menu(self):
         str = ""
-        keys = list(self.menu_ops.keys())
         for i in range(6):
             for j in range(i, len(self.menu_ops), 6):
-                key = keys[j]
+                key = list(self.menu_ops.keys())[j]
                 label, _ = self.menu_ops[key]
-                str += f"  {self.PINK}[{self.MAGENTA}{key.zfill(2)}{self.PINK}] {self.WHITE}| {label.ljust(21)}"
+                str += f"    {self.PINK}[{self.MAGENTA}{key.zfill(2)}{self.PINK}] {self.WHITE}| {label.ljust(18)}"
             str += "\n"
         return str
 
@@ -69,7 +67,7 @@ class ui:
         while True:
             utility.clear()
             print(Center.XCenter(vgratient(self.ASCII, self.START_COLOR, self.END_COLOR)))
-            print(Center.XCenter(self.make_menu()))
+            print(self.make_menu())
 
             while True:
                 print()

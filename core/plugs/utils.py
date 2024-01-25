@@ -17,13 +17,29 @@ class utility:
         if ask in whitelisted:
             log.warning(f"Answer Whitelisted! Press enter to continue...")
             input()
-            return 
+            __import__("main").ui().main_screen()
         elif ask == "back":
             log.info(f"Going Back")
             sleep(2)
-            return 
+            __import__("main").ui().main_screen()
         return ask
-    
+
+    def message_info(link = None):
+        if link is None:
+            link = utility.ask("Message link")
+        pattern = re.compile(r"^https:\/\/(ptb\.|canary\.)?discord\.com\/channels\/\d+\/\d+\/\d+$")
+        if pattern.match(link):
+            parts = link.split("/")
+            guild_id, channel_id, message_id = parts[4], parts[5], parts[6]
+            return {
+                "guild_id": guild_id,
+                "channel_id": channel_id,
+                "message_id": message_id
+            }
+        else:
+            log.warning("Invalid message link")
+            return None
+
     def get_random_id(amount: int):
         users = utility.get_ids()
         randomid = random.sample(users, amount)
