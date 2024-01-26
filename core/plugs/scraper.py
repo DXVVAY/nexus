@@ -186,12 +186,12 @@ class WebSocket(websocket.WebSocketApp):
             elif event_type == "GUILD_MEMBER_LIST_UPDATE":
                 parsed = self.parse_member(decoded)
                 self.msgs.append(len(self.members))
-                log.scraper(f"Scraping {len(self.members)} members")
+                log.scraper(f"Scraping {len(self.members)} {self.type}")
 
                 if self.d == len(self.members):
                     self.iter += 1
                     if self.iter == self.MAX_ITER:
-                        log.scraper(f"Scraping {len(self.members)} members")
+                        log.scraper(f"Scraping {len(self.members)} {self.type}")
                         self.endScraping = True
                         self.close()
                         return
@@ -272,9 +272,10 @@ def scraper(guild_id=None, channel_id=None, typ="ids"):
     token = utility.guild_token(guild_id)
     
     users = WebSocket(token, guild_id, channel_id, typ).run()
+    lines = sorted(users, key=lambda line: (len(line), line))
     with open(file, "w", encoding="utf-8") as f:
-        for user in users:
-            f.write(f"{user}\n")
+        for line in lines:
+            f.write(f"{line}\n")
     
     print()
     log.info(f"Scraped {len(users)} {typ}", "Scraper")
