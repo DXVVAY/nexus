@@ -46,7 +46,7 @@ from .plugs.config import *
 
 def set_title(text: str):
     system = os.name
-    title = f"[Nexus] | [{text}] | [Tokens: {len(config.get_tokens())}] | [Nexus.vin]"
+    title = f"[Nexus]  |  [{text}]  |  [Tokens: {len(config.get_tokens())}]  |  [Nexus.vin]"
     if system == 'nt':
         ctypes.windll.kernel32.SetConsoleTitleW(title)
     elif system == 'posix':
@@ -57,6 +57,9 @@ from .plugs.auth import *
 from .plugs.utils import*
 from .plugs.headers import *
 from .plugs.scraper import *
+
+# solvers
+from .solvers.nexcha import *
 
 # functions
 from .funcs.token_joiner import *

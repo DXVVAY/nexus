@@ -9,6 +9,7 @@ class logger:
         self.YELLOW = "\033[38;5;220m"
         self.BLUE = "\033[38;5;21m"
         self.PINK = "\033[38;5;176m"
+        self.CYAN = "\033[96m"
         self.prefix = f"{self.PINK}[{self.MAGENTA}{prefix}{self.PINK}]"
 
     def get_time(self):
@@ -39,6 +40,9 @@ class logger:
     def scraper(self, message: str, level="Scraper"):
         print(self.message(f"{self.BLUE}{level}", f"{self.BLUE}{message}"), end="\r", flush=True,)
     
+    def captcha(self, message: str, level="Captcha"):
+        print(self.message(f"{self.CYAN}{level}", f"{self.CYAN}{message}"))
+
     def PETC(self):
         input(f"  {self.PINK}[{self.MAGENTA}Press Enter To Continue{self.PINK}]")
 
@@ -51,10 +55,10 @@ class logger:
             "\"code\": 40002": "Locked",
             "\"code\": 10006": "Invalid Invite",
             "\"code\": 10004": "Not In Guild",
-            "\"code\": 50013:": "No Access",
-            "\"code\": 50001:": "No Access",
+            "\"code\": 50013": "No Access",
+            "\"code\": 50001": "No Access",
             "Unknown Message": "Unknown",
-            "\"code\": 50033:": "Invlid Recipient",
+            "\"code\": 50033": "Invlid Recipient",
             "Cannot send messages to this user:": "Disabled DMS"
         }
 
