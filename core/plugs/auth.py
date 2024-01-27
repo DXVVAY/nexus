@@ -13,7 +13,8 @@ class Auth:
                 self.SECRET_KEY = r.json().get("secret")
                 break
             except Exception as e:
-                log.failure(e)
+                e = str(e)
+                log.failure(e[:70])
 
     def exiter(self):
         os._exit(0)
