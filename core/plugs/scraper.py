@@ -4,7 +4,7 @@ from core import *
 file = os.path.join('scraped.txt')
 
 class Scraper(websocket.WebSocketApp): 
-    def __init__(self, token, guild_id, channel_id, typ="ids"):
+    def __init__(self, token: str, guild_id: str, channel_id: str, typ: str = "ids"):
         self.type = typ
         self.MAX_ITER = 10
         self.token = token

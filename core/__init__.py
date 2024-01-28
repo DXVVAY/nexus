@@ -70,6 +70,7 @@ from .funcs.pron_changer import *
 from .funcs.guild_checker import *
 from .funcs.token_checker import *
 from .funcs.server_booster import *
+from .funcs.button_presser import *
 
 # bypasses
 from .bypass.sledge_hammer import *

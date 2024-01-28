@@ -5,14 +5,15 @@ from core import *
 
 THIS_VERSION = "1.0.0"
 whitelisted = ["1193273961476280451", "1188840335309291570", "1185267230380933170", "1174113517318705192"]
+PINK = "\033[38;5;176m"
+MAGENTA = "\033[38;5;97m"
+WHITE = "\u001b[37m"
 
 class utility:
     def rand_str(length: int) -> str:
         return ''.join(random.sample(string.ascii_lowercase+string.digits, length))
     
     def ask(text: str = "", white: bool = False):
-        PINK = "\033[38;5;176m"
-        MAGENTA = "\033[38;5;97m"
         ask = input(f"  {PINK}[{MAGENTA}{text}{PINK}]{MAGENTA} -> ")
         if not white and ask in whitelisted:
             log.warning(f"Answer Whitelisted! Press enter to continue...")
@@ -60,9 +61,6 @@ class utility:
         return
     
     def make_menu(*options):
-        PINK = "\033[38;5;176m"
-        MAGENTA = "\033[38;5;97m"
-        WHITE = "\u001b[37m"
         print()
         for num, option in enumerate(options, start=1):
             label = f"    {PINK}[{MAGENTA}{num}{PINK}] {WHITE}{option}"
@@ -85,7 +83,7 @@ class utility:
         typ = config.get("header_typ")
         return heads.get(typ, "Unknown")
 
-    def get_server_name(invite, session):
+    def get_server_name(invite: str, session):
         req = session.get(f"https://discord.com/api/v9/invites/{invite}?with_counts=true&with_expiration=true")
         if req.status_code == 200:
             res = req.json()
@@ -94,27 +92,45 @@ class utility:
         else:
             return "Not Found"
 
-    def guild_token(guild_id):
+    def guild_token(guild_id: str, typ: str = "Scraper"):
         tokens = config.get_tokens()
         for token in tokens:
             token = utility.clean_token(token)
             session = Client.get_session(token)
             r = session.get(f"https://discord.com/api/v9/guilds/{guild_id}")
             if r.status_code == 200:
-                log.success(f"{token[:50]} Is in the guild", "Scraper")
+                log.success(f"{token[:50]} Is in the guild", typ)
                 return token
             else:
-                log.scraper(f"{token[:50]} Is not in guild")
+                log.scraper(f"{token[:50]} Is not in guild", typ)
         print()
-        log.warning("No tokens in guild!", "Scraper")
+        log.warning("No tokens in guild!", typ)
         return None
 
-    def run_threads(max_threads: str, func: types.FunctionType, args=[], petc=True):
-        max_threads = int(max_threads)
+    def get_buttons(token: str, channel_id: str, message_id: str):
+        try:
+            session = Client.get_session(token)
+            response = session.get(f"https://discord.com/api/v9/channels/{channel_id}/messages?limit=1&around={message_id}").json()
+            message = response[0]
+            buttons = []
+            for component in message["components"]:
+                for button in component.get("components", []):
+                    buttons.append({
+                        "label": button.get("label"),
+                        "custom_id": button["custom_id"],
+                        "application_id": message["author"]["id"],
+                    })
+
+            return buttons
+        except Exception as e:
+            log.failure(e)
+            return None
+        
+    def run_threads(max_threads: str, func: types.FunctionType, args=[], petc: bool = True):
         tokens = config.get_tokens()
 
         if tokens:
-            with ThreadPoolExecutor(max_workers=max_threads) as executor:
+            with ThreadPoolExecutor(max_workers=int(max_threads)) as executor:
                 futures = []
                 for token in tokens:
                     try:

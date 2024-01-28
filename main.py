@@ -7,10 +7,10 @@ class ui:
             '2': ('Token Leaver', token_leaver),
             '3': ('Channel Spammer', token_spammer),
             '4': ('Checker Menu', self.checker_menu),
-            '5': ('Bypass Rules', bypass_rules),
-            '6': ('Restorecord Bypass', self.tempfunc),
-            '7': ('Sledge Hammer', sledge_hammer),
-            '8': ('Button Presser', self.tempfunc),
+            '5': ('Bypass Menu', self.bypass_menu),
+            '6': ('N/A', self.tempfunc),
+            '7': ('N/A', self.tempfunc),
+            '8': ('Button Presser', button_presser),
             '9': ('Token Reactor', self.tempfunc),
             '10': ('Global Nicker', self.tempfunc),
             '11': ('Server Nicker', self.tempfunc),
@@ -88,6 +88,21 @@ class ui:
             token_checker()
         elif choice == "2":
             server_checker()
+        else:
+            log.warning("Invalid option. Please try again.")
+            sleep(1)
+            self.main_screen()
+
+    def bypass_menu(self):
+        set_title("Checker Menu")
+        utility.make_menu("Restorecord", "Sledge Hammer", "Rules Bypass")
+        choice = utility.ask("Choice")
+        if choice == "1":
+            self.tempfunc()
+        elif choice == "2":
+            sledge_hammer()
+        elif choice == "2":
+            bypass_rules()
         else:
             log.warning("Invalid option. Please try again.")
             sleep(1)

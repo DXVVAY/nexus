@@ -119,7 +119,7 @@ class WIN_headers:
         self.dict = self.returner()
 
     @staticmethod
-    def chrome_version():
+    def chrome_version() -> str:
         try:
             r = requests.get("https://versionhistory.googleapis.com/v1/chrome/platforms/linux/channels/stable/versions")
             data = json.loads(r.text)
@@ -239,7 +239,7 @@ headers = get_headers()
 
 class Client:
     @staticmethod
-    def get_session(token="", cookie=True):
+    def get_session(token: str = "", cookie: bool = True):
         cv = WIN_headers.chrome_version()
         typ = config.get("header_typ")
         iv1, iv2 = str(randint(15,16)), str(randint(1,5))
