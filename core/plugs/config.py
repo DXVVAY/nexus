@@ -13,7 +13,7 @@ class Config:
             "header_typ": "",
             "log_timer": False,
             "use_captcha": True,
-            "captcha_typ": "Custom",
+            "captcha_typ": "Nexcha",
             "captcha_key": "",
             "chatgpt_key": "",
             "debug_mode": False

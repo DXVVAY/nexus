@@ -59,7 +59,7 @@ from .plugs.headers import *
 from .plugs.scraper import *
 
 # solvers
-from .solvers.nexcha import *
+from .solvers import *
 
 # functions
 from .funcs.token_joiner import *

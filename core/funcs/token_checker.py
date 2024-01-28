@@ -2,7 +2,7 @@ from core import *
 
 valid_tokens = []
 
-def check(token):
+def check(token: str):
     session = Client.get_session(token)
     result = session.get(f"https://discord.com/api/v9/users/@me/settings")
     if result.status_code == 200:

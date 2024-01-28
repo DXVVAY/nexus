@@ -1,6 +1,6 @@
 from core import*
 
-def get_sub_id(token):
+def get_sub_id(token: str):
     session = utility.get_client(token)
     result = session.get( "https://discord.com/api/v9/users/@me/guilds/premium/subscription-slots")
     sub_ids = []
@@ -13,7 +13,7 @@ def get_sub_id(token):
             return None
         return sub_ids
 
-def boost(guild_id, token):
+def boost(guild_id: str, token: str):
     session = utility.get_client(token)
     sub_ids = get_sub_id(token)
     for i in range(len(sub_ids)):
