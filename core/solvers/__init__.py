@@ -18,7 +18,7 @@ class Captcha:
 
     def solve(self):
         if self.cap_type:
-            cap = self.cap_type(url=self.url, sitekey=self.sitekey, rqdata=self.rqdata).solve()
+            cap = self.cap_type().solve(url=self.url, sitekey=self.sitekey, rqdata=self.rqdata)
             return cap
 
     @staticmethod
