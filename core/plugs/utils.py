@@ -10,11 +10,11 @@ class utility:
     def rand_str(length: int) -> str:
         return ''.join(random.sample(string.ascii_lowercase+string.digits, length))
     
-    def ask(text: str = ""):
+    def ask(text: str = "", white: bool = False):
         PINK = "\033[38;5;176m"
         MAGENTA = "\033[38;5;97m"
         ask = input(f"  {PINK}[{MAGENTA}{text}{PINK}]{MAGENTA} -> ")
-        if ask in whitelisted:
+        if not white and ask in whitelisted:
             log.warning(f"Answer Whitelisted! Press enter to continue...")
             input()
             __import__("main").ui().main_screen()
