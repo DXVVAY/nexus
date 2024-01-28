@@ -44,6 +44,6 @@ class hcopcha:
                     continue
     
     def get_balance(self):
-        result = requests.post("https://api.hcoptcha.online/api/getUserData", json={"api_key": solver_key})
+        result = requests.post("https://api.hcoptcha.online/api/getUserData", json={"api_key": self.api_key})
         print(f"${result.json()['data']['balance']}")
         log.captcha(f"Balance: ${result.json()['data']['balance']}")
