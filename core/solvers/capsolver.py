@@ -2,7 +2,7 @@ from core import *
 
 class capsolver:
     def __init__(self):
-        self.api_key = "DEXV-rhdgva-82tk4q-g8nlj6-rpgmw0"
+        self.api_key = config.get("captcha_key")
         self.s = None
 
     def solve(self, url: str, sitekey: str, rqdata: str):
