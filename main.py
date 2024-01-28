@@ -6,7 +6,7 @@ class ui:
             '1': ('Token Joiner', token_joiner),
             '2': ('Token Leaver', token_leaver),
             '3': ('Channel Spammer', token_spammer),
-            '4': ('Checker Menu', self.tempfunc),
+            '4': ('Checker Menu', self.checker_menu),
             '5': ('Bypass Rules', self.tempfunc),
             '6': ('Restorecord Bypass', self.tempfunc),
             '7': ('Sledge Hammer', sledge_hammer),
@@ -88,6 +88,19 @@ class ui:
         print("temp func")
         log.PETC()
         self.main_screen()
+    
+    def checker_menu(self):
+        set_title("Checker Menu")
+        utility.make_menu("Token Checker", "Guild Checker")
+        choice = utility.ask("Choice")
+        if choice == "1":
+            token_checker()
+        elif choice == "2":
+            server_checker()
+        else:
+            log.warning("Invalid option. Please try again.")
+            sleep(1)
+            self.main_screen()
 
 def main():
     try:

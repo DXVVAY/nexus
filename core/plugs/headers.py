@@ -239,7 +239,7 @@ headers = get_headers()
 
 class Client:
     @staticmethod
-    def get_session(token: str, cookie=True):
+    def get_session(token="", cookie=True):
         cv = WIN_headers.chrome_version()
         typ = config.get("header_typ")
         iv1, iv2 = str(randint(15,16)), str(randint(1,5))
@@ -254,7 +254,8 @@ class Client:
         )
         
         session.headers = headers
-        session.headers.update({"Authorization": token})
+        if token != "":
+            session.headers.update({"Authorization": token})
         if cookie:
             session.cookies = session.get("https://discord.com").cookies
             

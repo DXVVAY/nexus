@@ -3,7 +3,7 @@ from core import *
 
 file = os.path.join('scraped.txt')
 
-class WebSocket(websocket.WebSocketApp): 
+class Scraper(websocket.WebSocketApp): 
     def __init__(self, token, guild_id, channel_id, typ="ids"):
         self.type = typ
         self.MAX_ITER = 10
@@ -271,7 +271,7 @@ def scraper(guild_id=None, channel_id=None, typ="ids"):
     
     token = utility.guild_token(guild_id)
     
-    users = WebSocket(token, guild_id, channel_id, typ).run()
+    users = Scraper(token, guild_id, channel_id, typ).run()
     lines = sorted(users, key=lambda line: (len(line), line))
     with open(file, "w", encoding="utf-8") as f:
         for line in lines:

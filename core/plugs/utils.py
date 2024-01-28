@@ -85,8 +85,8 @@ class utility:
         typ = config.get("header_typ")
         return heads.get(typ, "Unknown")
 
-    def get_server_name(invite):
-        req = requests.get(f"https://discord.com/api/v9/invites/{invite}?with_counts=true&with_expiration=true")
+    def get_server_name(invite, session):
+        req = session.get(f"https://discord.com/api/v9/invites/{invite}?with_counts=true&with_expiration=true")
         if req.status_code == 200:
             res = req.json()
             name = res['guild']['name']

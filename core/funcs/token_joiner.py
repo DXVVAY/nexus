@@ -1,13 +1,13 @@
 from core import *
 
-def join(invite: str, capkey: str, rqtoken: str, token: str):
+def join(token: str, invite: str, capkey: str, rqtoken: str):
     session = Client.get_session(token)
     capheads = lambda key, value: session.headers.update({key: value}) if key != "" else None
     capheads("x-captcha-key", capkey)
     capheads("x-captcha-rqtoken", rqtoken)
 
     result = session.post(f"https://discord.com/api/v9/invites/{invite}", json={"session_id": utility.rand_str(32)})
-    logcap = lambda message: log.success(f"{token[:50]}", message) if capkey != "" else log.success(f"With Captcha - {token[:50]}", message)
+    logcap = lambda message: log.success(f"{token[:50]}", message) if capkey == "" else log.success(f"With Captcha - {token[:50]}", message)
     usecap = lambda: (True, result.json()["captcha_rqtoken"], result.json()["captcha_rqdata"], result.json()["captcha_sitekey"]) if config.get("use_captcha") else (False, None, None, None)
 
     if result.status_code == 200:
@@ -21,9 +21,9 @@ def join(invite: str, capkey: str, rqtoken: str, token: str):
         return False, None, None, None
 
 def joiner(invite, token):
-    retry, rqtoken, rqdata, sitekey = join(invite, "", "", token)
+    retry, rqtoken, rqdata, sitekey = join(token, invite, "", "")
     if retry:
-        capkey = nexcha().solve("https://discord.com", sitekey=sitekey, rqdata=rqdata)
+        capkey = nexcha().solve(f"https://discord.com/api/v9/invites/{invite}", sitekey=sitekey, rqdata=rqdata)
         join(invite, capkey, rqtoken, token)
 
 def token_joiner():
@@ -31,5 +31,5 @@ def token_joiner():
     invite = utility.ask("Invite")
     invite = invite.split("/")[-1]
     thread = utility.ask("Thread Count")
-    log.info(utility.get_server_name(invite), "Joining")
+    log.info(utility.get_server_name(invite, Client.get_session()), "Joining")
     utility.run_threads(max_threads=thread, func=joiner, args=[invite])
