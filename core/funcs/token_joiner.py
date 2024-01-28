@@ -23,7 +23,7 @@ def join(token: str, invite: str, capkey: str, rqtoken: str):
 def joiner(invite, token):
     retry, rqtoken, rqdata, sitekey = join(token, invite, "", "")
     if retry:
-        capkey = nexcha().solve(f"https://discord.com/api/v9/invites/{invite}", sitekey=sitekey, rqdata=rqdata)
+        capkey = Captcha(f"https://discord.com/api/v9/invites/{invite}", sitekey=sitekey, rqdata=rqdata).solve()
         join(invite, capkey, rqtoken, token)
 
 def token_joiner():

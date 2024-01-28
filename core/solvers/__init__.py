@@ -1,15 +1,18 @@
 from .hcopcha import *
 from .nexcha import *
+from .capsolver import *
+from core import *
 
 class Captcha:
     def __init__(self, url: str, sitekey: str, rqdata=""):
         self.url = url
         self.sitekey = sitekey
         self.rqdata = rqdata
-        self.captcha_type = config._get('captcha_typ')
+        self.captcha_type = config.get('captcha_typ')
         self.types = {
             "Copcha": hcopcha,
-            "Nexcha": nexcha
+            "Nexcha": nexcha,
+            "Capsolver": capsolver
         }
         self.cap_type = self.types.get(self.captcha_type)
 
