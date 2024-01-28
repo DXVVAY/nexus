@@ -69,6 +69,8 @@ from .funcs.bio_changer import *
 from .funcs.pron_changer import *
 from .funcs.guild_checker import *
 from .funcs.token_checker import *
+from .funcs.server_booster import *
 
 # bypasses
 from .bypass.sledge_hammer import *
+from .bypass.guild_rules import *

@@ -65,8 +65,6 @@ class Auth:
             log.debug("Login successful", "Auth")
             log.debug(f"Welcome {status['discord_tag']}", "Auth")
             sleep(1)
-            #self.success = True
-            #return self
         else:
             log.warning(status['status_msg']) if 'status_msg' in status else log.warning(status)
             self.exiter()

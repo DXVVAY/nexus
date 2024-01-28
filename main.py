@@ -7,7 +7,7 @@ class ui:
             '2': ('Token Leaver', token_leaver),
             '3': ('Channel Spammer', token_spammer),
             '4': ('Checker Menu', self.checker_menu),
-            '5': ('Bypass Rules', self.tempfunc),
+            '5': ('Bypass Rules', bypass_rules),
             '6': ('Restorecord Bypass', self.tempfunc),
             '7': ('Sledge Hammer', sledge_hammer),
             '8': ('Button Presser', self.tempfunc),
@@ -26,14 +26,11 @@ class ui:
             '21': ('Server Mass Friend', self.tempfunc),
             '22': ('Mass Report', self.tempfunc),
             '23': ('Mass Thread', self.tempfunc),
-            '24': ('Server booster', self.tempfunc),
+            '24': ('Server booster', server_booster),
         }
         self.WHITE = "\u001b[37m"
         self.PINK = "\033[38;5;176m"
         self.MAGENTA = "\033[38;5;97m"
-        self.START_COLOR = [111, 70, 130]
-        self.END_COLOR = [218, 112, 214]
-
         self.ASCII = f"""
 
 
@@ -57,16 +54,10 @@ class ui:
         return str
 
     def main_screen(self):
-        #try:
-        #    if not locals()["_"].success:
-        #        return
-        #except:
-        #    return
-
         set_title("Main Menu")
         while True:
             utility.clear()
-            print(Center.XCenter(vgratient(self.ASCII, self.START_COLOR, self.END_COLOR)))
+            print(Center.XCenter(vgratient(self.ASCII, [111, 70, 130], [218, 112, 214])))
             print(self.make_menu())
 
             while True:
@@ -104,7 +95,6 @@ class ui:
 
 def main():
     try:
-        #locals()["_"] = Auth().authenticate()
         Auth().authenticate()
         ui().main_screen()
     except Exception as e:
