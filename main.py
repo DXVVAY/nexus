@@ -25,7 +25,7 @@ class ui:
             '20': ('User Mass DM', self.tempfunc),
             '21': ('Server Mass Friend', self.tempfunc),
             '22': ('Server Mass DM', self.tempfunc),
-            '23': ('Button Presser', self.tempfunc),
+            '23': ('Button Presser', button_presser),
             '24': ('Token Reactor', self.tempfunc),
         }
         self.WHITE = "\u001b[37m"

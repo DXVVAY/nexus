@@ -17,7 +17,7 @@ class capsolver:
                 "enterprisePayload": {
                   "rqdata": rqdata
                 },
-                "proxy": "http://3e8j8h0vylsx49g:54nw544u7iglpsm@rp.proxyscrape.com:6060",
+                "proxy": "https://ifpdbcmjj2inwin:4wyfy14mhtqljuw@rp.proxyscrape.com:6060",
             }
         }
 
