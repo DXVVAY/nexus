@@ -84,10 +84,9 @@ class ui:
         set_title("Checker Menu")
         utility.make_menu("Token Checker", "Guild Checker")
         choice = utility.ask("Choice")
-        if choice == "1":
-            token_checker()
-        elif choice == "2":
-            server_checker()
+        chs = {"1": token_checker, "2": server_checker}
+        if choice in chs:
+            chs[choice]()
         else:
             log.warning("Invalid option. Please try again.")
             sleep(1)
@@ -95,14 +94,11 @@ class ui:
 
     def bypass_menu(self):
         set_title("Checker Menu")
-        utility.make_menu("Restorecord", "Sledge Hammer", "Rules Bypass")
+        utility.make_menu("Restorecord", "Sledge Hammer", "Rules Bypass", "Wick Captcha")
         choice = utility.ask("Choice")
-        if choice == "1":
-            self.tempfunc()
-        elif choice == "2":
-            sledge_hammer()
-        elif choice == "2":
-            bypass_rules()
+        chs = {"1": self.tempfunc, "2": sledge_hammer, "3": bypass_rules, "4": wick_captcha}
+        if choice in chs:
+            chs[choice]()
         else:
             log.warning("Invalid option. Please try again.")
             sleep(1)
