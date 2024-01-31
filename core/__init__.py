@@ -1,5 +1,10 @@
 # Nexus Core!!!
 
+__title__ = 'Nexus'
+__author__ = 'DEXV', "Cyprian"
+__copyright__ = 'Copyright 2022-present nexus'
+__version__ = '1.0.0'
+
 # all imports needed
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timedelta
@@ -54,6 +59,7 @@ def set_title(text: str):
     #TODO: make a discord rpc later
 
 from .plugs.auth import *
+from .plugs.websocket import *
 from .plugs.utils import*
 from .plugs.headers import *
 from .plugs.scraper import *
@@ -75,3 +81,4 @@ from .funcs.button_presser import *
 # bypasses
 from .bypass.sledge_hammer import *
 from .bypass.guild_rules import *
+from .bypass.wick_captcha import *

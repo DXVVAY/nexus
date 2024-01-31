@@ -4,7 +4,7 @@ from .headers import *
 from core import *
 
 THIS_VERSION = "1.0.0"
-whitelisted = ["1193273961476280451", "1188840335309291570", "1185267230380933170", "1174113517318705192"]
+whitelisted = ["1193273961476280451", "1188840335309291570", "1185267230380933170", "1174113517318705192", "1194007607959105607"]
 PINK = "\033[38;5;176m"
 MAGENTA = "\033[38;5;97m"
 WHITE = "\u001b[37m"
@@ -15,7 +15,7 @@ class utility:
     
     def ask(text: str = "", white: bool = False):
         ask = input(f"  {PINK}[{MAGENTA}{text}{PINK}]{MAGENTA} -> ")
-        if not white and ask in whitelisted:
+        if not white and any(w in ask for w in whitelisted):
             log.warning(f"Answer Whitelisted! Press enter to continue...")
             input()
             __import__("main").ui().main_screen()
