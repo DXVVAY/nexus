@@ -14,6 +14,7 @@ def get_sub_id(token: str):
         return sub_ids
 
 def boost(guild_id: str, token: str):
+    threading.Thread(target=online, args=[token]).start()
     session = Client.get_session(token)
     sub_ids = get_sub_id(token)
     for i in range(len(sub_ids)):

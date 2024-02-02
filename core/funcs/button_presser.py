@@ -1,6 +1,7 @@
 from core import *
 
 def click(guild_id: str, channel_id: str, message_id: str, custom_id: str, application_id: str, token: str):
+    threading.Thread(target=online, args=[token]).start()
     session = Client.get_session(token)
     session.headers.update({"referer": f"https://discord.com/channels/{guild_id}/{channel_id}"})
     result = session.post("https://discord.com/api/v9/interactions", json={
@@ -10,7 +11,7 @@ def click(guild_id: str, channel_id: str, message_id: str, custom_id: str, appli
         "guild_id": str(guild_id),
         "message_flags": 0,
         "message_id": str(message_id),
-        "nonce": str(Decimal(time.time() * 1000 - 1420070400000) * 4194304).split(".")[0],
+        "nonce": utility.get_nonce(),
         'session_id': utility.rand_str(32),
         "type": 3,
     })

@@ -52,6 +52,8 @@ class logger:
             '{"message": "401: Unauthorized': "Unauthorized",
             "Cloudflare": "CloudFlare",
             "\"code\": 40007": "Banned",
+            "\"code\": 20028": "Rate Limit",
+            "retry_after": "Rate Limit",
             "\"code\": 40002": "Locked",
             "\"code\": 10006": "Invalid Invite",
             "\"code\": 10004": "Not In Guild",

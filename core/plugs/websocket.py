@@ -117,3 +117,46 @@ def sock_open(token: str, socket):
                 }
             }
         }))
+  
+def online(token: str):
+    try:
+        ws = websocket.WebSocket()
+        ws.connect("wss://gateway.discord.gg/?v=9&encoding=json")
+        device = utility.randp({"Discord iOS": 25, "Windows": 75})
+        ws.send(json.dumps({
+            "op": 2,
+            "d": {
+                "token": token,
+                "properties": {
+                    "$os": device,
+                    "$browser": device,
+                    "$device": device
+                }
+            },
+            "s": None,
+            "t": None
+        }, indent=4))
+
+        if config.get("token_rpc"):
+            act = [{
+                        "details": f"Nexus - Discord Exploit Tool",
+                        "state": f"https://nexus.vin",
+                        "name": "Nexus",
+                        "type": 1,
+                        "url": "https://nexus.vin"
+                    }]
+        else:
+            act = [{"type": 0, "timestamps": {"start": utility.rand_time()}, "name": utility.randp({"Battlerite": 10, "League of Legends": 10, "PLAYERUNKNOWN'S BATTLEGROUNDS": 10, "Counter-Strike: Global Offensive": 10, "Overwatch": 10, "Minecraft": 15, "World of Warcraft": 5, "Grand Theft Auto V": 10, "Tom Clancy's Rainbow Six Siege": 10, "Rocket League": 10}), }]
+        payload = json.dumps({
+            "op": 3,
+            "d": {
+                "since": 0,
+                "activities": act,
+                "status": utility.randp({"online": 35, "dnd": 45, "idle": 20}),
+                "afk": False
+            }
+        }, indent=4)
+        ws.send(payload)
+    except Exception as e:
+        log.failure(e)
+        online(token)

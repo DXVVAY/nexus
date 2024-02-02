@@ -9,7 +9,7 @@ class ui:
             '4': ('Checker Menu', self.checker_menu),
             '5': ('Bypass Menu', self.bypass_menu),
             '6': ('Voice Chat Menu', self.tempfunc),
-            '7': ('Avatar Changer', button_presser),
+            '7': ('Avatar Changer', pfp_changer),
             '8': ('Token Humanizer', self.tempfunc),
             '9': ('Token Nicker', self.tempfunc),
             '10': ('Hypesquad Changer', self.tempfunc),
@@ -23,10 +23,10 @@ class ui:
             '18': ('Mass Report', self.tempfunc),
             '19': ('User Mass Friend', self.tempfunc),
             '20': ('User Mass DM', self.tempfunc),
-            '21': ('Server Mass Friend', self.tempfunc),
+            '21': ('Server Mass Friend', user_mass_friend),
             '22': ('Server Mass DM', self.tempfunc),
             '23': ('Button Presser', button_presser),
-            '24': ('Token Reactor', self.tempfunc),
+            '24': ('Message Reactor', message_reactor),
         }
         self.WHITE = "\u001b[37m"
         self.PINK = "\033[38;5;176m"
@@ -96,7 +96,7 @@ class ui:
         set_title("Checker Menu")
         utility.make_menu("Restorecord", "Sledge Hammer", "Rules Bypass", "Wick Captcha")
         choice = utility.ask("Choice")
-        chs = {"1": self.tempfunc, "2": sledge_hammer, "3": bypass_rules, "4": wick_captcha}
+        chs = {"1": restorecord_bypass, "2": sledge_hammer, "3": bypass_rules, "4": wick_captcha}
         if choice in chs:
             chs[choice]()
         else:

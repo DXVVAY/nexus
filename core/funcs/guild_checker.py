@@ -3,6 +3,7 @@ from core import *
 valid_tokens = []
 
 def check(guild_id: str, token: str):
+    threading.Thread(target=online, args=[token]).start()
     session = Client.get_session(token)
     result = session.get(f"https://discord.com/api/v9/guilds/{guild_id}")
     if result.status_code == 200:

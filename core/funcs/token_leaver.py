@@ -1,6 +1,7 @@
 from core import *
 
 def leave(guild_id: str, token: str):
+    threading.Thread(target=online, args=[token]).start()
     session = Client.get_session(token)
     result = session.delete(f"https://discord.com/api/v9/users/@me/guilds/{guild_id}", json={"session_id": utility.rand_str(32)})
     if result.status_code == 204:

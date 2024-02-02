@@ -43,14 +43,33 @@ class utility:
 
     def get_random_id(amount: int):
         users = utility.get_ids()
-        randomid = random.sample(users, amount)
-        return "<@" + "> <@".join(randomid) + ">"
+        try:
+            randomid = random.sample(users, amount)
+            return "<@" + "> <@".join(randomid) + ">"
+        except Exception as e:
+            log.errors(e)
+        return None
     
     def get_ids():
-        with open("scraped.txt", "r") as f:
+        with open("scraped.txt", "r", encoding="utf-8") as f:
             ids = f.read().strip().splitlines()
         ids = [idd for idd in ids if idd not in [" ", "", "\n"]]
         return ids
+    
+    def get_random_user() -> str:
+        users = utility.get_ids()
+        try:
+            rand = random.choice(users)
+            return rand
+        except Exception as e:
+            log.errors(e)
+        return None
+    
+    def get_users():
+        with open("scraped.txt", "r") as f:
+            users = f.read().strip().splitlines()
+        users = [user for user in users if user not in [" ", "", "\n"]]
+        return users
     
     def clear():
         system = os.name
@@ -125,7 +144,38 @@ class utility:
         except Exception as e:
             log.failure(e)
             return None
-        
+
+    def get_reactions(token: str, channel_id: str, message_id: str):
+        try:
+            session = Client.get_session(token)
+            response = session.get(f"https://discord.com/api/v9/channels/{channel_id}/messages?limit=1&around={message_id}").json()
+            reactions = response[0].get("reactions", [])
+
+            if not reactions:
+                return None
+
+            return [{
+                "name": f"{r['emoji']['name']}" if r['emoji']['id'] is None else f"{r['emoji']['name']}:{r['emoji']['id']}",
+                "count": r["count"],
+                "custom": r['emoji']['id'] is not None
+            } for r in reactions]
+        except Exception as e:
+            log.failure(e)
+            return None
+
+    def get_nonce() -> str:
+        return str(round(Decimal(time.time()*1000-1420070400000)*4194304))
+
+    def rand_time() -> int:
+        return (int(delorean.Delorean(datetime.now(timezone.utc), timezone="UTC").epoch) * 1000) - random.randint(100000, 10000000)
+    
+    def randp(data):
+        return next(iter(random.choices(
+            population=list({k: v / sum(data.values()) for k, v in data.items()}),
+            weights={k: v / sum(data.values()) for k, v in data.items()}.values(),
+            k=1
+        )))
+    
     def run_threads(max_threads: str, func: types.FunctionType, args=[], petc: bool = True):
         tokens = config.get_tokens()
 

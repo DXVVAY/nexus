@@ -6,28 +6,32 @@ __copyright__ = 'Copyright 2022-present nexus'
 __version__ = '1.0.0'
 
 # all imports needed
+from datetime import datetime, timedelta, timezone
 from concurrent.futures import ThreadPoolExecutor
-from datetime import datetime, timedelta
+from tkinter.filedialog import askopenfilename
+from base64 import b64encode
 from decimal import Decimal
 from random import randint
 from pystyle import Center
 from colorama import Fore
 from ab5 import vgratient
 from time import sleep
+from tkinter import Tk
 import tls_client
 import websocket
 import threading
 import platform
 import requests
 import keyboard
+import delorean
 import hashlib
 import base64
 import random
-import httpx
 import string
 import shutil
 import ctypes
 import types
+import httpx
 import json
 import time
 import uuid
@@ -77,8 +81,12 @@ from .funcs.guild_checker import *
 from .funcs.token_checker import *
 from .funcs.server_booster import *
 from .funcs.button_presser import *
+from .funcs.message_reactor import *
+from .funcs.pfp_changer import *
+from .funcs.server_mass_friend import *
 
 # bypasses
 from .bypass.sledge_hammer import *
 from .bypass.guild_rules import *
 from .bypass.wick_captcha import *
+from .bypass.restore_cord import *

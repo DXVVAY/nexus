@@ -41,7 +41,7 @@ class Wick_cap():
     def finish(self, user_id: str, id: str, answer: str):
         self.session.post("https://discord.com/api/v9/interactions", json={
             "type": 5,
-            "nonce": str(round(Decimal(time.time()*1000-1420070400000)*4194304)),
+            "nonce": utility.get_nonce(),
             "guild_id": self.guild_id,
             "channel_id": self.channel_id,
             "application_id": self.bot_id,
@@ -63,7 +63,7 @@ class Wick_cap():
     def press(self, custom_id: str, message_flags: int):
         self.session.post("https://discord.com/api/v9/interactions", json={
             "type": 3,
-            "nonce": str(round(Decimal(time.time()*1000-1420070400000)*4194304)),
+            "nonce": utility.get_nonce(),
             "guild_id": self.guild_id,
             "channel_id": self.channel_id,
             "message_flags": message_flags,
@@ -130,4 +130,4 @@ def wick_captcha():
     guild_id = message["guild_id"]
     channel_id = message["channel_id"]
     message_id = message["message_id"]
-    utility.run_threads(max_threads="1", func=wick, args=[guild_id, channel_id, message_id])
+    utility.run_threads(max_threads="4", func=wick, args=[guild_id, channel_id, message_id])

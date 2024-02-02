@@ -21,7 +21,6 @@ class Captcha:
             cap = self.cap_type().solve(url=self.url, sitekey=self.sitekey, rqdata=self.rqdata)
             return cap
 
-    @staticmethod
     def get_captcha_bal(self):
         if self.cap_type:
             self.cap_type.get_balance()

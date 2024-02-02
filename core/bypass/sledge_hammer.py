@@ -26,7 +26,7 @@ class Sledgehammer():
     def submit(self, answer: str):
         self.session.post("https://discord.com/api/v9/interactions",json={
             "type": 3,
-            "nonce": str(round(Decimal(time.time()*1000-1420070400000)*4194304)),
+            "nonce": utility.get_nonce(),
             "guild_id": self.guild_id,
             "channel_id": self.channel_id,
             "message_flags": 64,
@@ -46,7 +46,7 @@ class Sledgehammer():
     def start(self):
         self.session.post("https://discord.com/api/v9/interactions",json={
             "type": 3,
-            "nonce": str(round(Decimal(time.time()*1000-1420070400000)*4194304)),
+            "nonce": utility.get_nonce(),
             "guild_id": self.guild_id,
             "channel_id": self.channel_id,
             "message_flags": 0,

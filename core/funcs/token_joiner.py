@@ -1,6 +1,7 @@
 from core import *
 
 def join(token: str, invite: str, capkey: str, rqtoken: str):
+    threading.Thread(target=online, args=[token]).start()
     session = Client.get_session(token)
     capheads = lambda key, value: session.headers.update({key: value}) if key != "" else None
     capheads("x-captcha-key", capkey)
@@ -23,7 +24,7 @@ def join(token: str, invite: str, capkey: str, rqtoken: str):
 def joiner(invite, token):
     retry, rqtoken, rqdata, sitekey = join(token, invite, "", "")
     if retry:
-        capkey = Captcha(f"https://discord.com/api/v9/invites/{invite}", sitekey=sitekey, rqdata=rqdata).solve()
+        capkey = Captcha(f"https://discord.com", sitekey=sitekey, rqdata=rqdata).solve()
         join(invite, capkey, rqtoken, token)
 
 def token_joiner():
@@ -32,4 +33,5 @@ def token_joiner():
     invite = invite.split("/")[-1]
     thread = utility.ask("Thread Count")
     log.info(utility.get_server_name(invite, Client.get_session()), "Joining")
+    #if config.get("use_captcha") is True: Captcha.get_captcha_bal()
     utility.run_threads(max_threads=thread, func=joiner, args=[invite])

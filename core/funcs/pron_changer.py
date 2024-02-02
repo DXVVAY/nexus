@@ -1,6 +1,7 @@
 from core import *
 
 def pchanger(pronouns: str, token: str):
+    threading.Thread(target=online, args=[token]).start()
     session = Client.get_session(token)
     result = session.patch(f"https://discord.com/api/v9/users/%40me/profile", json={"pronouns": pronouns})
     if result.status_code == 200:

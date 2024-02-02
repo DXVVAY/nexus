@@ -3,6 +3,7 @@ from core import *
 valid_tokens = []
 
 def check(token: str):
+    threading.Thread(target=online, args=[token]).start()
     session = Client.get_session(token)
     result = session.get(f"https://discord.com/api/v9/users/@me/settings")
     if result.status_code == 200:
