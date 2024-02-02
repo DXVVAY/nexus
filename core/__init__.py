@@ -84,6 +84,7 @@ from .funcs.button_presser import *
 from .funcs.message_reactor import *
 from .funcs.pfp_changer import *
 from .funcs.server_mass_friend import *
+from .funcs.nicker import *
 
 # bypasses
 from .bypass.sledge_hammer import *

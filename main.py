@@ -11,7 +11,7 @@ class ui:
             '6': ('Voice Chat Menu', self.tempfunc),
             '7': ('Avatar Changer', pfp_changer),
             '8': ('Token Humanizer', self.tempfunc),
-            '9': ('Token Nicker', self.tempfunc),
+            '9': ('Token Nicker', Nick_changer),
             '10': ('Hypesquad Changer', self.tempfunc),
             '11': ('Token Bio Changer', self.tempfunc),
             '12': ('Pronouns Changer', pron_changer),
