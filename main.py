@@ -77,24 +77,29 @@ class UI:
         log.PETC()
         self.main_screen()
     
-    def menu(self, title: str, options: dict) -> None:
-        set_title(title)
-        utility.make_menu(*options.values())
+    def checker_menu(self) -> None:
+        set_title("Checker Menu")
+        utility.make_menu("Token Checker", "Guild Checker")
         choice = utility.ask("Choice")
-        if choice in options:
-            options[choice]()
+        chs = {"1": token_checker, "2": server_checker}
+        if choice in chs:
+            chs[choice]()
         else:
             log.warning("Invalid option. Please try again.")
             sleep(1)
             self.main_screen()
 
-    def checker_menu(self) -> None:
-        options = {"1": token_checker, "2": server_checker}
-        self.menu("Checker Menu", options)
-
     def bypass_menu(self) -> None:
-        options = {"1": restorecord_bypass, "2": sledge_hammer, "3": bypass_rules, "4": wick_captcha}
-        self.menu("Checker Menu", options)
+        set_title("Checker Menu")
+        utility.make_menu("Restorecord", "Sledge Hammer", "Rules Bypass", "Wick Captcha")
+        choice = utility.ask("Choice")
+        chs = {"1": restorecord_bypass, "2": sledge_hammer, "3": bypass_rules, "4": wick_captcha}
+        if choice in chs:
+            chs[choice]()
+        else:
+            log.warning("Invalid option. Please try again.")
+            sleep(1)
+            self.main_screen()
 
 def main() -> None:
     try:

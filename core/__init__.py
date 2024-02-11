@@ -24,7 +24,6 @@ import platform
 import requests
 import keyboard
 import delorean
-import hashlib
 import base64
 import random
 import string
