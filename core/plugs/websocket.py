@@ -135,5 +135,6 @@ def online(token: str):
         ws.send(json.dumps({"op": 2, "d": {"token": token, "properties": {"$os": "Discord iOS", "$browser": "Chrome", "$device": ""}}, "s": None, "t": None}))
         act = [{"type": 0, "timestamps": {"start": utility.rand_time()}, "name": random.choice(["Battlerite", "League of Legends", "PLAYERUNKNOWN'S BATTLEGROUNDS", "Counter-Strike: Global Offensive", "Overwatch", "Minecraft", "World of Warcraft", "Grand Theft Auto V", "Tom Clancy's Rainbow Six Siege", "Rocket League"])}] if not config.get("token_rpc") else [{"details": "Nexus - Discord Exploit Tool", "state": "https://nexus.vin", "name": "Nexus", "type": 1, "url": "https://nexus.vin"}]
         ws.send(json.dumps({"op": 3, "d": {"since": 0, "activities": act, "status": random.choice(["online", "dnd", "idle"]), "afk": False}}))
-    except:
+    except Exception as e:
+        log.failure(e)
         online(token)
