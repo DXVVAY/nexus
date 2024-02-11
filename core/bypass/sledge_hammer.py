@@ -1,7 +1,7 @@
 from core import *
 
 class Sledgehammer:
-    def __init__(self, log, token: str, guild_id: str, channel_id: str, message_id: str) -> None:
+    def __init__(self, token: str, guild_id: str, channel_id: str, message_id: str) -> None:
         self.session = Client.get_session(token)
         self.token = token
         self.bot_id = "863168632941969438"
@@ -9,7 +9,6 @@ class Sledgehammer:
         self.guild_id = guild_id
         self.channel_id = channel_id
         self.message_id = message_id
-        self.log = log
 
     def get_captcha(self):
         g = get_ephermal(self.token, self.bot_id, "Verify yourself to gain access to the server")
@@ -43,7 +42,7 @@ class Sledgehammer:
                 ]
             }
         })
-        self.log.success(f"{self.token[:35]}", "Pressed") if result.status_code == 204 else self.log.errors(self.token, result.text, result.status_code)
+        log.success(f"{self.token[:50]}", "Pressed") if result.status_code == 204 else log.errors(self.token, result.text, result.status_code)
 
     def start(self):
         result = self.session.post("https://discord.com/api/v9/interactions",json={
@@ -60,7 +59,7 @@ class Sledgehammer:
                 "custom_id": "startVerification.en"
             }
         })
-        self.log.success(f"{self.token[:35]}", "Pressed") if result.status_code == 204 else self.log.errors(self.token, result.text, result.status_code)
+        log.success(f"{self.token[:50]}", "Pressed") if result.status_code == 204 else log.errors(self.token, result.text, result.status_code)
 
     def get_answer(self, embed: str):
         desc = embed["embeds"][0]["description"]
@@ -75,18 +74,17 @@ class Sledgehammer:
         self.submit(answer)
         return answer
 
-def hammer(log, guild_id: str, channel_id: str, message_id: str, token: str):
+def hammer(guild_id: str, channel_id: str, message_id: str, token: str):
     s = time.time()
     hammer = Sledgehammer(token=token, guild_id=guild_id, channel_id=channel_id, message_id=message_id)
     answer = hammer.verify()
     rn = str(time.time() - s)
     log.success(f"{token[:40]} - Answer: {answer} - Time: {rn[:5]}", "Bypassed")
 
-def sledge_hammer(console, link: str):
-    set_title("Sledge Hammer Bypass", console)
-    log = logger(console)
+def sledge_hammer(link: str):
+    set_title("Sledge Hammer Bypass")
     message = utility.message_info(link)
     guild_id = message["guild_id"]
     channel_id = message["channel_id"]
     message_id = message["message_id"]
-    utility.run_threads(func=hammer, args=[log, guild_id, channel_id, message_id], log=log)
+    utility.run_threads(max_threads="1", func=hammer, args=[guild_id, channel_id, message_id])

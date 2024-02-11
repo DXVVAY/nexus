@@ -12,63 +12,51 @@ WHITE: str = "\u001b[37m"
 class utility:
     def rand_str(length: int) -> str:
         return ''.join(random.sample(string.ascii_lowercase+string.digits, length))
-    
+
     def ask(text: str = "", white: bool = False) -> str:
-        ask: str = input(f"  {PINK}[{MAGENTA}{text}{PINK}]{MAGENTA} -> ")
-        if not white and any(w in ask for w in whitelisted):
-            log.warning(f"Answer Whitelisted! Press enter to continue...")
-            input()
-            __import__("main").ui().main_screen()
-        elif ask == "back":
-            log.info(f"Going Back")
+        ask = input(f"  {PINK}[{MAGENTA}{text}{PINK}]{MAGENTA} -> ")
+        if (not white and any(w in ask for w in whitelisted)) or ask == "back":
+            log.info("Going Back" if ask == "back" else "Answer Whitelisted! Press enter to continue...")
+            if ask != "back":
+                input()
             sleep(2)
             __import__("main").ui().main_screen()
         return ask
 
     def message_info(link = None) -> Optional[Dict[str, str]]:
-        if link is None:
-            link = utility.ask("Message link")
-        pattern = re.compile(r"^https:\/\/(ptb\.|canary\.)?discord\.com\/channels\/\d+\/\d+\/\d+$")
-        if pattern.match(link):
-            parts = link.split("/")
-            guild_id, channel_id, message_id = parts[4], parts[5], parts[6]
+        link = link or utility.ask("Message link")
+        pattern = r"^https:\/\/(ptb\.|canary\.)?discord\.com\/channels\/\d+\/\d+\/\d+$"
+        if re.match(pattern, link):
+            guild_id, channel_id, message_id = link.split("/")[4:7]
             return {
-                "guild_id": guild_id,
-                "channel_id": channel_id,
+                "guild_id": guild_id, 
+                "channel_id": channel_id, 
                 "message_id": message_id
             }
-        else:
-            log.warning("Invalid message link")
-            return None
+        log.warning("Invalid message link")
 
     def get_random_id(amount: int) -> Optional[str]:
-        users = utility.get_ids()
         try:
-            randomid = random.sample(users, amount)
-            return "<@" + "> <@".join(randomid) + ">"
+            return "<@" + "> <@".join(random.sample(utility.get_ids(), amount)) + ">"
         except Exception as e:
             log.errors(e)
-        return None
     
     def get_ids() -> List[str]:
         with open("scraped.txt", "r", encoding="utf-8") as f:
             ids = f.read().strip().splitlines()
-        ids = [idd for idd in ids if idd not in [" ", "", "\n"]]
+        ids = list(filter(None, ids))
         return ids
     
     def get_random_user() -> Optional[str]:
-        users = utility.get_ids()
         try:
-            rand = random.choice(users)
-            return rand
+            return random.choice(utility.get_ids())
         except Exception as e:
             log.errors(e)
-        return None
     
     def get_users() -> List[str]:
         with open("scraped.txt", "r") as f:
             users = f.read().strip().splitlines()
-        users = [user for user in users if user not in [" ", "", "\n"]]
+        users = list(filter(None, users))
         return users
     
     def clear() -> None:
@@ -80,11 +68,7 @@ class utility:
         return
     
     def make_menu(*options: str) -> None:
-        print()
-        for num, option in enumerate(options, start=1):
-            label = f"    {PINK}[{MAGENTA}{num}{PINK}] {WHITE}{option}"
-            print(label)
-        print()
+        print("\n" + "\n".join(f"    {PINK}[{MAGENTA}{num}{PINK}] {WHITE}{option}" for num, option in enumerate(options, start=1)) + "\n")
 
     def clean_token(token: str) -> str:
         if re.match(r"(.+):(.+):(.+)", token):
@@ -92,19 +76,12 @@ class utility:
         return token
 
     def get_client_type() -> str:
-        heads: Dict[str, str] = {
-            "Windows": "Desktop", 
-            "iOS": "iOS"
-        }
-        typ = config.get("header_type")
-        return heads.get(typ, "Unknown")
+        return {"Windows": "Desktop", "iOS": "iOS"}.get(config.get("header_type"), "Unknown")
 
     def get_server_name(invite: str, session) -> str:
         req = session.get(f"https://discord.com/api/v9/invites/{invite}?with_counts=true&with_expiration=true")
         if req.status_code == 200:
-            res = req.json()
-            name = res['guild']['name']
-            return name
+            return req.json()['guild']['name']
         else:
             return "Not Found"
 
@@ -115,10 +92,10 @@ class utility:
             session = Client.get_session(token)
             r = session.get(f"https://discord.com/api/v9/guilds/{guild_id}")
             if r.status_code == 200:
-                log.success(f"{token[:35]} Is in the guild", typ)
+                log.success(f"{token[:50]} Is in the guild", typ)
                 return token
             else:
-                log.scraper(f"{token[:35]} Is not in guild", typ)
+                log.scraper(f"{token[:50]} Is not in guild", typ)
         print()
         log.warning("No tokens in guild!", typ)
         return None
@@ -147,10 +124,9 @@ class utility:
             session = Client.get_session(token)
             response = session.get(f"https://discord.com/api/v9/channels/{channel_id}/messages?limit=1&around={message_id}").json()
             reactions = response[0].get("reactions", [])
-
             if not reactions:
                 return None
-
+            
             return [{
                 "name": f"{r['emoji']['name']}" if r['emoji']['id'] is None else f"{r['emoji']['name']}:{r['emoji']['id']}",
                 "count": r["count"],
@@ -166,18 +142,10 @@ class utility:
     def rand_time() -> int:
         return (int(delorean.Delorean(datetime.now(timezone.utc), timezone="UTC").epoch) * 1000) - random.randint(100000, 10000000)
     
-    def randp(data):
-        return next(iter(random.choices(
-            population = list({k: v / sum(data.values()) for k, v in data.items()}),
-            weights = {k: v / sum(data.values()) for k, v in data.items()}.values(),
-            k = 1
-        )))
-    
-    def run_threads(func: types.FunctionType, args=[], petc: bool = True, log=log) -> None:
+    def run_threads(max_threads: str, func: types.FunctionType, args=[], petc: bool = True) -> None:
         tokens = config.get_tokens()
-
         if tokens:
-            with ThreadPoolExecutor(max_workers=int("17")) as executor:
+            with ThreadPoolExecutor(max_workers=int(max_threads)) as executor:
                 futures = []
                 for token in tokens:
                     try:

@@ -1,8 +1,7 @@
-import json
-from datetime import datetime
+from core import *
 
 class logger:
-    def __init__(self, console=None, prefix: str = "Nexus"):
+    def __init__(self, prefix: str = "Nexus"):
         self.WHITE: str = "\u001b[37m"
         self.MAGENTA: str = "\033[38;5;97m"
         self.RED: str = "\033[38;5;196m"
@@ -12,60 +11,35 @@ class logger:
         self.PINK: str = "\033[38;5;176m"
         self.CYAN: str = "\033[96m"
         self.prefix: str = f"{self.PINK}[{self.MAGENTA}{prefix}{self.PINK}]"
-        self.preefix: str = f"[{prefix}]"
-        self.console = console
 
     def get_time(self) -> str:
         return datetime.now().strftime("%H:%M:%S")
-
-    def get_timer(self) -> bool:
-        try:
-            with open('config.json', 'r') as f:
-                return json.load(f).get('log_timer', True)
-        except json.JSONDecodeError:
-            return True
-
+    
     def message(self, level: str, message: str) -> str:
-        timer = self.get_timer()
-        time_now: str = f"  {self.PINK}[{self.MAGENTA}{self.get_time()}{self.PINK}]  {self.WHITE}|" if timer else ""
+        timer = json.loads(open('config.json', 'r').read()).get('log_timer', True)
+        time_now = f"  {self.PINK}[{self.MAGENTA}{self.get_time()}{self.PINK}]  {self.WHITE}|" if timer else ""
         return f"  {self.prefix}  {self.WHITE}|{time_now}  {self.PINK}[{level}{self.PINK}]  {self.WHITE}->  {self.PINK}[{self.MAGENTA}{message}{self.PINK}]"
-
-    def console_message(self, level: str, message: str) -> str:
-        timer = self.get_timer()
-        time_now = f"  [{self.get_time()}]  |" if timer else ""
-        return f"  {self.preefix}  |{time_now}  [{level}] -> [{message}]\n"
-
-    def log_to_console(self, level: str, message: str):
-        if self.console is not None:
-            self.console.console.insert("0.0", self.console_message(level, message))
 
     def success(self, message: str, level: str = "Success"):
         print(self.message(f"{self.GREEN}{level}", f"{self.GREEN}{message}"))
-        self.log_to_console(level, message)
 
     def warning(self, message: str, level: str = "Warning"):
         print(self.message(f"{self.YELLOW}{level}", f"{self.YELLOW}{message}"))
-        self.log_to_console(level, message)
 
     def info(self, message: str, level: str = "Info"):
         print(self.message(f"{self.BLUE}{level}", f"{self.BLUE}{message}"))
-        self.log_to_console(level, message)
 
     def failure(self, message: str, level: str = "Failure"):
         print(self.message(f"{self.RED}{level}", f"{self.RED}{message}"))
-        self.log_to_console(level, message)
 
     def debug(self, message: str, level: str = "Debug"):
         print(self.message(f"{self.MAGENTA}{level}", f"{self.MAGENTA}{message}"))
-        self.log_to_console(level, message)
 
     def scraper(self, message: str, level: str = "Scraper"):
         print(self.message(f"{self.BLUE}{level}", f"{self.BLUE}{message}"), end="\r", flush=True,)
-        self.log_to_console(level, message)
-
+    
     def captcha(self, message: str, level: str = "Captcha"):
         print(self.message(f"{self.CYAN}{level}", f"{self.CYAN}{message}"))
-        self.log_to_console(level, message)
 
     def PETC(self):
         input(f"  {self.PINK}[{self.MAGENTA}Press Enter To Continue{self.PINK}]")
@@ -90,11 +64,9 @@ class logger:
 
         for er, msg in errors.items():
             if er in res_text:
-                self.failure(f"{token[:35]}", msg)
-                self.log_to_console(msg, f"{token[:35]}")
+                self.failure(f"{token[:50]}", msg)
                 return
 
-        self.failure(f"{token[:35]} - {res_text} {self.WHITE}- {self.RED}{res_status_code}")
-        self.log_to_console("Failure", f"{token[:35]} - {res_text} - {res_status_code}")
+        self.failure(f"{token[:50]} - {res_text} {self.WHITE}- {self.RED}{res_status_code}")
 
 log = logger()

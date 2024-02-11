@@ -11,7 +11,6 @@ from concurrent.futures import ThreadPoolExecutor
 from typing import Dict, List, Optional, Union
 from tkinter.filedialog import askopenfilename
 from PIL.JpegImagePlugin import JpegImageFile
-from tempfile import NamedTemporaryFile
 from base64 import b64encode
 from decimal import Decimal
 from random import randint
@@ -61,18 +60,15 @@ clear()
 from .plugs.logger import *
 from .plugs.config import *
 
-def set_title(text: str, console=None) -> None:
+def set_title(text: str) -> None:
     system = os.name
     title = f"[Nexus]  |  [{text}]  |  [Tokens: {len(config.get_tokens())}]  |  [Nexus.vin]"
     if system == 'nt':
         ctypes.windll.kernel32.SetConsoleTitleW(title)
-        if console is not None: console.title(title)
     elif system == 'posix':
         sys.stdout.write(title)
-        if console is not None: console.title(title)
     # TODO: make a discord rpc later
 
-from .plugs.auth import *
 from .plugs.websocket import *
 from .plugs.utils import*
 from .plugs.headers import *

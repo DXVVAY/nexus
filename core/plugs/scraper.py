@@ -111,18 +111,18 @@ class Scraper(websocket.WebSocketApp):
                 "capabilities": 125,
                 "properties": {
                     "os": "Windows",
-                    "browser": "Firefox",
+                    "browser": "Chrome",
                     "device": "",
-                    "system_locale": "it-IT",
-                    "browser_user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:94.0) Gecko/20100101 Firefox/94.0",
-                    "browser_version": "94.0",
+                    "system_locale": "sv-SE",
+                    "browser_user_agent": headers["user-agent"],
+                    "browser_version": "121.0",
                     "os_version": "10",
                     "referrer": "",
                     "referring_domain": "",
                     "referrer_current": "",
                     "referring_domain_current": "",
                     "release_channel": "stable",
-                    "client_build_number": 103981,
+                    "client_build_number": 264913,
                     "client_event_source": None
                 },
                 "presence": {

@@ -10,7 +10,7 @@ class Config:
     def update_config(self) -> None:
         self.content: Dict[str, Union[str, bool]] = {
             "nexus_key": "",
-            "header_type": "",
+            "header_type": "Windows",
             "captcha_type": "Nexcha",
             "token_rpc": True,
             "log_timer": False,

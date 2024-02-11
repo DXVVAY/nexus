@@ -28,18 +28,15 @@ class UI:
             '23': ('Button Presser', button_presser),
             '24': ('Message Reactor', message_reactor),
         }
-        self.WHITE = "\u001b[37m"
-        self.PINK = "\033[38;5;176m"
-        self.MAGENTA = "\033[38;5;97m"
         self.ASCII = f"""
 
 
                                  
                                  ███╗   ██╗███████╗██╗  ██╗██╗   ██╗███████╗
-                                 ████╗  ██║██╔════╝╚██╗██╔╝██║   ██║██╔════╝ {self.PINK}[{self.MAGENTA}Website{self.PINK}] {self.WHITE}| Nexus.vin
-                                 ██╔██╗ ██║█████╗   ╚███╔╝ ██║   ██║███████╗ {self.PINK}[{self.MAGENTA}Tokens{self.PINK}]  {self.WHITE}| {len(config.get_tokens())}
-                                 ██║╚██╗██║██╔══╝   ██╔██╗ ██║   ██║╚════██║ {self.PINK}[{self.MAGENTA}Client{self.PINK}]  {self.WHITE}| {utility.get_client_type()}
-                                 ██║ ╚████║███████╗██╔╝ ██╗╚██████╔╝███████║ {self.PINK}[{self.MAGENTA}Discord{self.PINK}] {self.WHITE}| nexustool
+                                 ████╗  ██║██╔════╝╚██╗██╔╝██║   ██║██╔════╝ {PINK}[{MAGENTA}Website{PINK}] {WHITE}| Nexus.vin
+                                 ██╔██╗ ██║█████╗   ╚███╔╝ ██║   ██║███████╗ {PINK}[{MAGENTA}Tokens{PINK}]  {WHITE}| {len(config.get_tokens())}
+                                 ██║╚██╗██║██╔══╝   ██╔██╗ ██║   ██║╚════██║ {PINK}[{MAGENTA}Client{PINK}]  {WHITE}| {utility.get_client_type()}
+                                 ██║ ╚████║███████╗██╔╝ ██╗╚██████╔╝███████║ {PINK}[{MAGENTA}Discord{PINK}] {WHITE}| nexustool
                                  ╚═╝  ╚═══╝╚══════╝╚═╝  ╚═╝ ╚═════╝ ╚══════╝
         """
 
@@ -49,7 +46,7 @@ class UI:
             for j in range(i, len(self.menu_ops), 6):
                 key = list(self.menu_ops.keys())[j]
                 label, _ = self.menu_ops[key]
-                str += f"    {self.PINK}[{self.MAGENTA}{key.zfill(2)}{self.PINK}] {self.WHITE}| {label.ljust(18)}"
+                str += f"    {PINK}[{MAGENTA}{key.zfill(2)}{PINK}] {WHITE}| {label.ljust(18)}"
             str += "\n"
         return str
 
@@ -62,7 +59,7 @@ class UI:
 
             while True:
                 print()
-                ch = input(f"  {self.PINK}[{self.MAGENTA}Choice{self.PINK}]{self.MAGENTA} -> ").lstrip("0")
+                ch = input(f"  {PINK}[{MAGENTA}Choice{PINK}]{MAGENTA} -> ").lstrip("0")
                 cc = ch.upper()
                 if cc in self.menu_ops:
                     choice = cc
@@ -76,37 +73,31 @@ class UI:
             func()
 
     def tempfunc(self) -> None:
-        print("temp func")
+        log.info("This is a temp function that does nothing")
         log.PETC()
         self.main_screen()
     
-    def checker_menu(self) -> None:
-        set_title("Checker Menu")
-        utility.make_menu("Token Checker", "Guild Checker")
+    def menu(self, title: str, options: dict) -> None:
+        set_title(title)
+        utility.make_menu(*options.values())
         choice = utility.ask("Choice")
-        chs = {"1": token_checker, "2": server_checker}
-        if choice in chs:
-            chs[choice]()
+        if choice in options:
+            options[choice]()
         else:
             log.warning("Invalid option. Please try again.")
             sleep(1)
             self.main_screen()
 
+    def checker_menu(self) -> None:
+        options = {"1": token_checker, "2": server_checker}
+        self.menu("Checker Menu", options)
+
     def bypass_menu(self) -> None:
-        set_title("Checker Menu")
-        utility.make_menu("Restorecord", "Sledge Hammer", "Rules Bypass", "Wick Captcha")
-        choice = utility.ask("Choice")
-        chs = {"1": restorecord_bypass, "2": sledge_hammer, "3": bypass_rules, "4": wick_captcha}
-        if choice in chs:
-            chs[choice]()
-        else:
-            log.warning("Invalid option. Please try again.")
-            sleep(1)
-            self.main_screen()
+        options = {"1": restorecord_bypass, "2": sledge_hammer, "3": bypass_rules, "4": wick_captcha}
+        self.menu("Checker Menu", options)
 
 def main() -> None:
     try:
-        #Auth().authenticate()
         UI().main_screen()
     except Exception as e:
         log.failure(e)
