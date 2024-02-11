@@ -1,7 +1,7 @@
 # Nexus Core!!!
 
 __title__ = 'Nexus'
-__author__ = 'DEXV', "Cyprian"
+__author__ = 'DEXV'
 __copyright__ = 'Copyright 2022-present nexus'
 __version__ = '1.0.0'
 
