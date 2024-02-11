@@ -10,7 +10,6 @@ from datetime import datetime, timedelta, timezone
 from concurrent.futures import ThreadPoolExecutor
 from typing import Dict, List, Optional, Union
 from tkinter.filedialog import askopenfilename
-from PIL.JpegImagePlugin import JpegImageFile
 from base64 import b64encode
 from decimal import Decimal
 from random import randint
@@ -18,11 +17,6 @@ from pystyle import Center
 from colorama import Fore
 from ab5 import vgratient
 from time import sleep
-from tkinter import Tk
-from io import BytesIO
-from PIL import Image
-import customtkinter
-import tkinter as tk
 import tls_client
 import websocket
 import threading

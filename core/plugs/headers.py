@@ -112,7 +112,7 @@ class WIN_headers:
         log.info(self.native_buildd, "Native Build")
         log.info(self.main_versiond, "App Version")
         log.info(self.chrome, "Chrome Version")
-        log.info(f"{self.user_agent[:70]}...", "User Agent")
+        log.info(f"{self.user_agent[:60]}...", "User Agent")
         rn = str(time.time() - s)
         log.info(f"Successfully Built Headers In {rn[:5]} Seconds"); sleep(2)
         self.x_super_properties = self.desktop_xprops()
