@@ -5,7 +5,7 @@ def nchanger(Nickname: str, token: str):
     session = Client.get_session(token)
     result = session.patch(f"https://discord.com/api/v9/users/@me", json={"global_name": Nickname})
     if result.status_code == 200:
-        log.success(f"{token[:50]}", "Changed Global Nickname")
+        log.success(f"{token[:35]}", "Changed Global Nickname")
     else:
         log.errors(token, result.text, result.status_code)
 

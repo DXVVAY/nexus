@@ -15,7 +15,7 @@ def click(guild_id: str, channel_id: str, message_id: str, custom_id: str, appli
         'session_id': utility.rand_str(32),
         "type": 3,
     })
-    log.success(f"{token[:50]}", "Pressed") if result.status_code == 204 else log.errors(token, result.text, result.status_code)
+    log.success(f"{token[:35]}", "Pressed") if result.status_code == 204 else log.errors(token, result.text, result.status_code)
 
 def button_presser():
     set_title(f"Button Presser")

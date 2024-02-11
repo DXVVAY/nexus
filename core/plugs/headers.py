@@ -207,10 +207,10 @@ class WIN_headers:
         return self.dict
 
 def get_headers():
-    typ = config.get("header_typ")
+    typ = config.get("header_type")
     heads = {
-        "win": WIN_headers,
-        "ios": IOS_headers,
+        "Windows": WIN_headers,
+        "iOS": IOS_headers,
     }
 
     if typ == "":
@@ -218,11 +218,11 @@ def get_headers():
         make_menu("Window Headers", "IOS Headers")
         head = input(f"  {PINK}[{MAGENTA}Choice{PINK}]{MAGENTA} -> ")
         map = {
-            "1": "win",
-            "2": "ios"
+            "1": "Windows",
+            "2": "iOS"
         }
         if head in map:
-            config._set("header_typ", map[head])
+            config._set("header_type", map[head])
             typ = map[head]
         else:
             log.failure("Invalid Option")
@@ -241,11 +241,11 @@ class Client:
     @staticmethod
     def get_session(token: str = "", cookie: bool = True):
         cv = WIN_headers.chrome_version()
-        typ = config.get("header_typ")
+        typ = config.get("header_type")
         iv1, iv2 = str(randint(15,16)), str(randint(1,5))
         idents = {
-            "ios": f"safari_ios_{iv1}_{iv2}",
-            "win": f"chrome_{cv[:3]}"
+            "iOS": f"safari_ios_{iv1}_{iv2}",
+            "Windows": f"chrome_{cv[:3]}"
         }
         ident = idents.get(typ)
         session = tls_client.Session(
@@ -260,9 +260,9 @@ class Client:
             site = session.get("https://discord.com")
             session.cookies = site.cookies
             
-        session.proxies = {
-            "http": f"http://3e8j8h0vylsx49g:54nw544u7iglpsm@rp.proxyscrape.com:6060", 
-            "https": f"http://3e8j8h0vylsx49g:54nw544u7iglpsm@rp.proxyscrape.com:6060"
-        }
+        #session.proxies = {
+        #    "http": f"http://3e8j8h0vylsx49g:54nw544u7iglpsm@rp.proxyscrape.com:6060", 
+        #    "https": f"http://3e8j8h0vylsx49g:54nw544u7iglpsm@rp.proxyscrape.com:6060"
+        #}
 
         return session

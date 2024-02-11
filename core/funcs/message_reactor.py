@@ -5,7 +5,7 @@ def react(emoji: str, message_id: str, channel_id: str, token: str):
     session = Client.get_session(token)
     result = session.put(f"https://discord.com/api/v9/channels/{channel_id}/messages/{message_id}/reactions/{emoji}/%40me?location=Message&burst=false")
     if result.status_code == 204:
-        log.success(f"{token[:50]}", "Reacted")
+        log.success(f"{token[:35]}", "Reacted")
     else:
         log.errors(token, result.text, result.status_code)
 

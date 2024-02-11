@@ -20,7 +20,7 @@ def boost(guild_id: str, token: str):
     for i in range(len(sub_ids)):
         result = session.put(f"https://discord.com/api/v9/guilds/{guild_id}/premium/subscriptions", json={"user_premium_guild_subscription_slot_ids": [f"{sub_ids[i]}"]})
         if result.status_code == 201:
-            log.success(f"{token[:50]}", "Boosted")
+            log.success(f"{token[:35]}", "Boosted")
         else:
             log.errors(token, result.text, result.status_code)
 

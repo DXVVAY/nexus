@@ -9,14 +9,14 @@ def friend(token: str, username: str, capkey: str, rqtoken: str):
         capheads("x-captcha-rqtoken", rqtoken)
     
         result = session.post(f"https://discord.com/api/v9/users/@me/relationships", json={"session_id": utility.rand_str(32), "username": username})
-        logcap = lambda message: log.success(f"{token[:50]}", message) if capkey == "" else log.success(f"With Captcha - {token[:50]}", message)
+        logcap = lambda message: log.success(f"{token[:35]}", message) if capkey == "" else log.success(f"With Captcha - {token[:35]}", message)
         usecap = lambda: (True, result.json()["captcha_rqtoken"], result.json()["captcha_rqdata"], result.json()["captcha_sitekey"]) if config.get("use_captcha") else (False, None, None, None)
     
         if result.status_code == 204:
             logcap("Frinded")
             return False, None, None, None
         elif result.text.startswith('{"captcha_key"'):
-            log.failure(f"{token[:50]}", "Captcha")
+            log.failure(f"{token[:35]}", "Captcha")
             return usecap()
         else:
             log.errors(token, result.text, result.status_code)

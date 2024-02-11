@@ -7,7 +7,7 @@ def check(guild_id: str, token: str):
     session = Client.get_session(token)
     result = session.get(f"https://discord.com/api/v9/guilds/{guild_id}")
     if result.status_code == 200:
-        log.success(f"{token[:50]}", "In Guild")
+        log.success(f"{token[:35]}", "In Guild")
         valid_tokens.append(token)
     else:
         log.errors(token, result.text, result.status_code)

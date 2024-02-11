@@ -5,7 +5,7 @@ def pfpchange(b64: str, token:str):
     session = Client.get_session(token)
     result = session.patch(f"https://discord.com/api/v9/users/%40me/profile", json={"avatar": f"data:image/png;base64,{(b64.decode('utf-8'))}"})
     if result.status_code == 200:
-        log.success(f"{token[:50]}", "Changed PFP")
+        log.success(f"{token[:35]}", "Changed PFP")
     else:
         log.errors(token, result.text, result.status_code)
 

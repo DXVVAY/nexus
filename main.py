@@ -1,6 +1,6 @@
 from core import *
 
-class ui:
+class UI:
     def __init__(self):
         self.menu_ops = {
             '1': ('Token Joiner', token_joiner),
@@ -34,7 +34,7 @@ class ui:
         self.ASCII = f"""
 
 
-
+                                 
                                  ███╗   ██╗███████╗██╗  ██╗██╗   ██╗███████╗
                                  ████╗  ██║██╔════╝╚██╗██╔╝██║   ██║██╔════╝ {self.PINK}[{self.MAGENTA}Website{self.PINK}] {self.WHITE}| Nexus.vin
                                  ██╔██╗ ██║█████╗   ╚███╔╝ ██║   ██║███████╗ {self.PINK}[{self.MAGENTA}Tokens{self.PINK}]  {self.WHITE}| {len(config.get_tokens())}
@@ -42,8 +42,8 @@ class ui:
                                  ██║ ╚████║███████╗██╔╝ ██╗╚██████╔╝███████║ {self.PINK}[{self.MAGENTA}Discord{self.PINK}] {self.WHITE}| nexustool
                                  ╚═╝  ╚═══╝╚══════╝╚═╝  ╚═╝ ╚═════╝ ╚══════╝
         """
-        
-    def make_menu(self):
+
+    def make_menu(self) -> str:
         str = ""
         for i in range(6):
             for j in range(i, len(self.menu_ops), 6):
@@ -53,7 +53,7 @@ class ui:
             str += "\n"
         return str
 
-    def main_screen(self):
+    def main_screen(self) -> None:
         set_title("Main Menu")
         while True:
             utility.clear()
@@ -75,12 +75,12 @@ class ui:
             _, func = self.menu_ops[choice]
             func()
 
-    def tempfunc(self):
+    def tempfunc(self) -> None:
         print("temp func")
         log.PETC()
         self.main_screen()
     
-    def checker_menu(self):
+    def checker_menu(self) -> None:
         set_title("Checker Menu")
         utility.make_menu("Token Checker", "Guild Checker")
         choice = utility.ask("Choice")
@@ -92,7 +92,7 @@ class ui:
             sleep(1)
             self.main_screen()
 
-    def bypass_menu(self):
+    def bypass_menu(self) -> None:
         set_title("Checker Menu")
         utility.make_menu("Restorecord", "Sledge Hammer", "Rules Bypass", "Wick Captcha")
         choice = utility.ask("Choice")
@@ -104,10 +104,10 @@ class ui:
             sleep(1)
             self.main_screen()
 
-def main():
+def main() -> None:
     try:
-        Auth().authenticate()
-        ui().main_screen()
+        #Auth().authenticate()
+        UI().main_screen()
     except Exception as e:
         log.failure(e)
         log.PETC()

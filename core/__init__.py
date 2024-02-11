@@ -5,10 +5,13 @@ __author__ = 'DEXV', "Cyprian"
 __copyright__ = 'Copyright 2022-present nexus'
 __version__ = '1.0.0'
 
-# all imports needed
+# all 3rd party imports needed
 from datetime import datetime, timedelta, timezone
 from concurrent.futures import ThreadPoolExecutor
+from typing import Dict, List, Optional, Union
 from tkinter.filedialog import askopenfilename
+from PIL.JpegImagePlugin import JpegImageFile
+from tempfile import NamedTemporaryFile
 from base64 import b64encode
 from decimal import Decimal
 from random import randint
@@ -17,6 +20,10 @@ from colorama import Fore
 from ab5 import vgratient
 from time import sleep
 from tkinter import Tk
+from io import BytesIO
+from PIL import Image
+import customtkinter
+import tkinter as tk
 import tls_client
 import websocket
 import threading
@@ -41,7 +48,7 @@ import sys
 import os
 import re
 
-def clear():
+def clear() -> None:
     system = os.name
     if system == 'nt':
         os.system('cls')
@@ -50,17 +57,20 @@ def clear():
     return
 clear()
 
+# Mandetory imports
 from .plugs.logger import *
 from .plugs.config import *
 
-def set_title(text: str):
+def set_title(text: str, console=None) -> None:
     system = os.name
     title = f"[Nexus]  |  [{text}]  |  [Tokens: {len(config.get_tokens())}]  |  [Nexus.vin]"
     if system == 'nt':
         ctypes.windll.kernel32.SetConsoleTitleW(title)
+        if console is not None: console.title(title)
     elif system == 'posix':
         sys.stdout.write(title)
-    #TODO: make a discord rpc later
+        if console is not None: console.title(title)
+    # TODO: make a discord rpc later
 
 from .plugs.auth import *
 from .plugs.websocket import *

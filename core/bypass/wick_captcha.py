@@ -1,7 +1,7 @@
 from core import *
 
-class Wick_cap():
-    def __init__(self, token: str, guild_id: str, channel_id: str, message_id: str) -> None:
+class WickCap:
+    def __init__(self, log, token: str, guild_id: str, channel_id: str, message_id: str) -> None:
         self.socket = websocket.WebSocket()
         self.session = Client.get_session(token)
         self.token = token
@@ -10,6 +10,7 @@ class Wick_cap():
         self.guild_id = guild_id
         self.channel_id = channel_id
         self.message_id = message_id
+        self.log = log
 
     def get_cap(self, url: str):
         result = requests.post(f"http://wick.dexv.lol:2000/api/wick/solve", json={"url": url})
@@ -19,14 +20,14 @@ class Wick_cap():
                 solve = data["solve"]
                 return solve
             else:
-                log.failure(f"Failed to solve wick captcha")
+                self.log.failure(f"Failed to solve wick captcha")
                 return None
         else:
-            log.failure(f"Failed to solve wick captcha")
+            self.log.failure(f"Failed to solve wick captcha")
             return None
 
     def get_embed(self):
-        g =  get_ephermal(self.token, self.bot_id, "Please type the captcha below to be able to access this server!")
+        g = get_ephermal(self.token, self.bot_id, "Please type the captcha below to be able to access this server!")
         thread = threading.Thread(target=g.run)
         thread.start()
         self.start()
@@ -39,7 +40,7 @@ class Wick_cap():
         return g.message
 
     def finish(self, user_id: str, id: str, answer: str):
-        self.session.post("https://discord.com/api/v9/interactions", json={
+        result = self.session.post("https://discord.com/api/v9/interactions", json={
             "type": 5,
             "nonce": utility.get_nonce(),
             "guild_id": self.guild_id,
@@ -59,9 +60,10 @@ class Wick_cap():
                 }]
             }
         })
+        self.log.success(f"{self.token[:35]}", "Pressed") if result.status_code == 204 else self.log.errors(self.token, result.text, result.status_code)
 
     def press(self, custom_id: str, message_flags: int):
-        self.session.post("https://discord.com/api/v9/interactions", json={
+        result = self.session.post("https://discord.com/api/v9/interactions", json={
             "type": 3,
             "nonce": utility.get_nonce(),
             "guild_id": self.guild_id,
@@ -75,6 +77,7 @@ class Wick_cap():
                 "custom_id": custom_id,
             }
         })
+        self.log.success(f"{self.token[:35]}", "Pressed") if result.status_code == 204 else self.log.errors(self.token, result.text, result.status_code)
 
     def get_custom_id(self, messages: dict):
         for message in messages:
@@ -117,17 +120,18 @@ class Wick_cap():
         self.finish(token_id, id, answer)
         return answer
 
-def wick(guild_id: str, channel_id: str, message_id: str, token: str):
+def wick(log, guild_id: str, channel_id: str, message_id: str, token: str):
     s = time.time()
-    wick = Wick_cap(token=token, guild_id=guild_id, channel_id=channel_id, message_id=message_id)
+    wick = WickCap(log=log, token=token, guild_id=guild_id, channel_id=channel_id, message_id=message_id)
     answer = wick.verify()
     rn = str(time.time() - s)
     log.success(f"{token[:40]} - Answer: {answer} - Time: {rn[:5]}", "Bypassed")
 
-def wick_captcha():
-    set_title("Wick Captcha Bypass")
-    message = utility.message_info()
+def wick_captcha(console, link: str):
+    set_title("Wick Captcha Bypass", console)
+    log = logger(console)
+    message = utility.message_info(link)
     guild_id = message["guild_id"]
     channel_id = message["channel_id"]
     message_id = message["message_id"]
-    utility.run_threads(max_threads="4", func=wick, args=[guild_id, channel_id, message_id])
+    utility.run_threads(func=wick, args=[log, guild_id, channel_id, message_id], log=log)

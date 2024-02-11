@@ -6,7 +6,6 @@ file = os.path.join('scraped.txt')
 class Scraper(websocket.WebSocketApp): 
     def __init__(self, token: str, guild_id: str, channel_id: str, typ: str = "ids"):
         self.type = typ
-        self.MAX_ITER = 10
         self.token = token
         self.guild_id = guild_id
         self.channel_id = channel_id
@@ -19,36 +18,36 @@ class Scraper(websocket.WebSocketApp):
         }
         super().__init__(
             "wss://gateway.discord.gg/?encoding=json&v=9",
-            header=self.socket_headers,
-            on_open=lambda ws: self.sock_open(ws),
-            on_message=lambda ws, msg: self.sock_message(ws, msg),
-            on_close=lambda ws, close_code, close_msg: self.sock_close(
+            header = self.socket_headers,
+            on_open = lambda ws: self.sock_open(ws),
+            on_message = lambda ws, msg: self.sock_message(ws, msg),
+            on_close = lambda ws, close_code, close_msg: self.sock_close(
                 ws, close_code, close_msg
             ),
         )
-        self.endScraping = False
+        self.max_iter = 50
+        self.end_scrap = False
         self.guilds = {}
-        self.members: list[str] = []
+        self.members: set[str] = set()
         self.ranges = [[0]]
-        self.lastRange = 0
+        self.last_range = 0
         self.packets_recv = 0
         self.msgs = []
         self.d = 1
         self.iter = 0
-        self.big_iter = 0
         self.finished = False
 
-    def get_ranges(self, index, multiplier, memberCount):
-        initialNum = int(index * multiplier)
-        rangesList = [[initialNum, initialNum + 99]]
-        if memberCount > initialNum + 99:
-            rangesList.append([initialNum + 100, initialNum + 199])
-        if [0, 99] not in rangesList:
-            rangesList.insert(0, [0, 99])
-        return rangesList
+    def get_ranges(self, index: int, multiplier: int, mc: int):
+        init_num = int(index * multiplier)
+        range_lis = [[init_num, init_num + 99]]
+        if mc > init_num + 99:
+            range_lis.append([init_num + 100, init_num + 199])
+        if [0, 99] not in range_lis:
+            range_lis.insert(0, [0, 99])
+        return range_lis
 
-    def parse_member(self, response):
-        memberdata = {
+    def parse_member(self, response: dict) -> dict:
+        data = {
             "online_count": response["d"]["online_count"],
             "member_count": response["d"]["member_count"],
             "id": response["d"]["id"],
@@ -60,44 +59,49 @@ class Scraper(websocket.WebSocketApp):
         }
         
         for chunk in response["d"]["ops"]:
-            memberdata["types"].append(chunk["op"])
+            data["types"].append(chunk["op"])
             if chunk["op"] in ("SYNC", "INVALIDATE"):
-                memberdata["locations"].append(chunk["range"])
+                data["locations"].append(chunk["range"])
                 if chunk["op"] == "SYNC":
-                    memberdata["updates"].append(chunk["items"])
+                    data["updates"].append(chunk["items"])
                 else:
-                    memberdata["updates"].append([])
+                    data["updates"].append([])
             elif chunk["op"] in ("INSERT", "UPDATE", "DELETE"):
-                memberdata["locations"].append(chunk["index"])
+                data["locations"].append(chunk["index"])
                 if chunk["op"] == "DELETE":
-                    memberdata["updates"].append([])
+                    data["updates"].append([])
                 else:
-                    memberdata["updates"].append(chunk["item"])
-        return memberdata
+                    data["updates"].append(chunk["item"])
+        return data
 
-    def find_most_reoccuring(self, list):
+    def most_rec(self, list: list):
         return max(set(list), key=list.count)
 
     def run(self) -> list[str]:
         try:
             self.run_forever()
             self.finished = True
-            return self.members
+            return list(self.members)
         except Exception as e:
-            print(e)
+            log.failure(e)
             pass
 
     def scrape_users(self):
-        if self.endScraping == False:
-            self.send(
-                '{"op":14,"d":{"guild_id":"'
-                + self.guild_id
-                + '","typing":true,"activities":true,"threads":true,"channels":{"'
-                + self.channel_id
-                + '":'
-                + json.dumps(self.ranges)
-                + "}}}"
-            )
+        if self.end_scrap == False:
+            data = {
+                "op": 14,
+                "d": {
+                    "guild_id": self.guild_id,
+                    "typing": True,
+                    "activities": True,
+                    "threads": True,
+                    "channels": {
+                        self.channel_id: self.ranges
+                    }
+                }
+            }
+
+            self.send(json.dumps(data))
 
     def sock_open(self, ws):
         message = {
@@ -146,7 +150,7 @@ class Scraper(websocket.WebSocketApp):
 
         self.send(json.dumps(message))
 
-    def heart_beat(self, interval):
+    def heart_beat(self, interval: float):
         try:
             while True:
                 self.send('{"op":1,"d":' + str(self.packets_recv) + "}")
@@ -190,13 +194,13 @@ class Scraper(websocket.WebSocketApp):
 
                 if self.d == len(self.members):
                     self.iter += 1
-                    if self.iter == self.MAX_ITER:
+                    if self.iter == self.max_iter:
                         log.scraper(f"Scraping {len(self.members)} {self.type}")
-                        self.endScraping = True
+                        self.end_scrap = True
                         self.close()
                         return
 
-                self.d = int(self.find_most_reoccuring(self.msgs))
+                self.d = int(self.most_rec(self.msgs))
 
                 if (
                     isinstance(parsed, dict)
@@ -211,50 +215,34 @@ class Scraper(websocket.WebSocketApp):
                                     for member in item:
                                         if isinstance(member, dict) and "member" in member:
                                             mem = member["member"]
-                                            obj = {
-                                                "tag": mem["user"]["username"]
-                                                + "#"
-                                                + mem["user"]["discriminator"],
-                                                "id": mem["user"]["id"],
-                                            }
                                             if not mem["user"].get("bot"):
                                                 if self.type == "ids":
-                                                    self.members.append(
-                                                        str(mem["user"]["id"])
-                                                    )
+                                                    self.members.add(str(mem["user"]["id"]))
                                                 else:
-                                                    self.members.append(
-                                                        str(mem["user"]["username"])
-                                                    )
+                                                    self.members.add(str(mem["user"]["username"]))
                         elif index == "UPDATE":
                             for item in parsed["updates"][elem]:
                                 if isinstance(item, dict) and "member" in item:
                                     mem = item["member"]
-                                    obj = {
-                                        "tag": mem["user"]["username"]
-                                        + "#"
-                                        + mem["user"]["discriminator"],
-                                        "id": mem["user"]["id"],
-                                    }
                                     if not mem["user"].get("bot"):
                                         if self.type == "ids":
-                                            self.members.append(str(mem["user"]["id"]))
+                                            self.members.add(str(mem["user"]["id"]))
                                         else:
-                                            self.members.append(str(mem["user"]["username"]))
+                                            self.members.add(str(mem["user"]["username"]))
 
-                        self.lastRange += 1
+                        self.last_range += 1
                         self.ranges = self.get_ranges(
-                            self.lastRange,
+                            self.last_range,
                             100,
                             self.guilds[self.guild_id]["member_count"],
                         )
                         time.sleep(0.1)
                         self.scrape_users()
 
-                if self.endScraping:
+                if self.end_scrap:
                     self.close()
         except Exception as e:
-            print(e)
+            log.failure(e)
 
 def reset_ids():
     if os.path.exists(file):
