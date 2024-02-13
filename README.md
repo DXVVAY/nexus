@@ -32,6 +32,10 @@ but I wouldnt trust him with anything like that, but ofc its your choice
 
 he claims that he coded it, but who knows, its a simple thing to make and knowing him he doesnt have the skill for that
 
+*edit* he didnt make the sniper 💀
+![image](https://images.guns.lol/DUmKclxnSU.png)
+
+ps: ik his pfp is cringe asf 💀
 # Nexus Breakdown
 Nexus raider consists of four components:
 
