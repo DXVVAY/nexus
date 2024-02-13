@@ -18,6 +18,10 @@ He claims he can code in js and other shit but just like always he is another sk
 
 and thats why i would say that its **NOT** worth it to start a project with him.
 
+![image](https://github.com/DXVVAY/nexus/assets/89728480/749142a1-9a34-4553-96a6-6258521faa78)
+
+he has so much skill 
+
 ## his fire project
 
 ![image](https://images.guns.lol/nTrwe5yyWS.png)
