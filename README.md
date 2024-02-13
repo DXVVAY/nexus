@@ -81,6 +81,8 @@ Finally it uses one of the headers to send requests to the discord API very secu
  
  Body, really helpful + sexy french man
 
+ anicename, big femboy. didnt really help in coding but was helpful
+
 
  # And finally fuck you to:
  Cyprian (xavier/ksawier) 
