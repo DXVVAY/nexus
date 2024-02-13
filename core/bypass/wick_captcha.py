@@ -30,12 +30,9 @@ class WickCap:
         thread = threading.Thread(target=g.run)
         thread.start()
         self.start()
-
         while not g.open:
             time.sleep(1)
-
         thread.join()
-
         return g.message
 
     def finish(self, user_id: str, id: str, answer: str):
@@ -104,19 +101,19 @@ class WickCap:
         self.press(custom_id, 0)
 
     def get_link(self, embed: str):
-        url = embed["embeds"][0]["image"]["url"]
-        custom_id = embed["components"][0]["components"][0]["custom_id"]
-        return url, custom_id
+        url, custom_id, message_id = (
+            embed["embeds"][0]["image"]["url"],
+            embed["components"][0]["components"][0]["custom_id"],
+            embed["id"]
+        )
+        return url, custom_id, message_id
 
     def verify(self):
         embed = self.get_embed()
-        link, custom_id = self.get_link(embed)
-        a = custom_id.split('_')
-        token_id = a[-1] if len(a) > 2 else None
-        self.message_id = embed["id"]
-        id = self.answer(custom_id)
+        link, custom_id, self.message_id = self.get_link(embed)
+        token_id = custom_id.split('_')[-1] if len(custom_id.split('_')) > 2 else None
         answer = self.get_cap(link)
-        self.finish(token_id, id, answer)
+        self.finish(token_id, self.answer(custom_id), answer)
         return answer
 
 def wick(guild_id: str, channel_id: str, message_id: str, token: str):
